@@ -1,8 +1,13 @@
-# hack001
+# hack001: Crediflow (draft)
 
 ver. 0.0.0
 
-## エンドクレジット NFT(仮)
+## Crediflow (draft)
+
+エンドクレジットNFT:「Credit」と「Flow」を組み合わせた造語で、エンドクレジットのシステムを表しています。
+
+[product detail](./docs/detail-ja.md) | [product contract sequence](./docs/sequence-ja.md)
+※現時点ではアイデアであり、実装をはじめたばかりです
 
 ---
 
