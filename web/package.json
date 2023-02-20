@@ -10,7 +10,7 @@
 		"test": "playwright test",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"fmt": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
