@@ -9,3 +9,9 @@
 ```
 
 open Flowser
+
+## test
+
+```script
+> flow test ./cadence/test/base.cdc
+```

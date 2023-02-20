@@ -9,6 +9,15 @@ ver. 0.0.0
 [product detail](./docs/detail-ja.md) | [product contract sequence](./docs/sequence-ja.md)
 ※現時点ではアイデアであり、実装をはじめたばかりです
 
+## Glossary
+
+* Crediflow: The name of the system, derived from "Credit" and "Flow".
+* Creator: A content creator, such as a movie, anime, or game producer.
+* Consumer: An individual who watches a movie, anime, or plays a game.
+* Pool: Crediflow's liquidity pool.
+* Claim: The process by which a Creator can withdraw FT from the pool.
+* Tip: The process by which a Consumer can deposit FT into the pool.
+
 ---
 
 ### 👋 Welcome Flow Developer
@@ -19,26 +28,26 @@ Welcome to your new Flow project. We've created the basic folder structure you w
 
 Getting started can feel overwhelming, but we are here for you. Depending on how accustomed you are to Flow here's a list of resources you might find useful:
 
-- **[Cadence documentation](https://developers.flow.com/cadence/language)**: here you will find language reference for Cadence, which will be the language in which you develop your smart contracts,
-- **[Visual Studio Code](https://code.visualstudio.com/?wt.mc_id=DX_841432)** and **[Cadence extension](https://marketplace.visualstudio.com/items?itemName=onflow.cadence)**: we suggest using Visual Studio Code IDE for writing Cadence with the Cadence extension installed, that will give you nice syntax highlighting and additional smart features,
-- **[SDKs](https://developers.flow.com/tools#sdks)**: here you will find a list of SDKs you can use to ease the interaction with Flow network (sending transactions, fetching accounts etc),
-- **[Tools](https://developers.flow.com/tools#development-tools)**: development tools you can use to make your development easier, [Flowser](https://docs.flowser.dev/) can be super handy to see what's going on the blockchain while you develop
+* **[Cadence documentation](https://developers.flow.com/cadence/language)**: here you will find language reference for Cadence, which will be the language in which you develop your smart contracts,
+* **[Visual Studio Code](https://code.visualstudio.com/?wt.mc_id=DX_841432)** and **[Cadence extension](https://marketplace.visualstudio.com/items?itemName=onflow.cadence)**: we suggest using Visual Studio Code IDE for writing Cadence with the Cadence extension installed, that will give you nice syntax highlighting and additional smart features,
+* **[SDKs](https://developers.flow.com/tools#sdks)**: here you will find a list of SDKs you can use to ease the interaction with Flow network (sending transactions, fetching accounts etc),
+* **[Tools](https://developers.flow.com/tools#development-tools)**: development tools you can use to make your development easier, [Flowser](https://docs.flowser.dev/) can be super handy to see what's going on the blockchain while you develop
 
 ### 📦 Project Structure
 
 Your project comes with some standard folders which have a special purpose:
 
-- `/cadence` inside here is where your Cadence smart contracts code lives
-- `/web` put your web client if needed inside this folder, remove if not needed
-- `/api` put your backend code if needed inside this folder, remove if not needed
-- `flow.json` configuration file for your project, you can think of it as package.json, but you don't need to worry, flow dev command will configure it for you
+* `/cadence` inside here is where your Cadence smart contracts code lives
+* `/web` put your web client if needed inside this folder, remove if not needed
+* `/api` put your backend code if needed inside this folder, remove if not needed
+* `flow.json` configuration file for your project, you can think of it as package.json, but you don't need to worry, flow dev command will configure it for you
 
 Inside `cadence` folder you will find:
 
-- `/contracts` location for Cadence contracts go in this folder
-- `/scripts` location for Cadence scripts goes here
-- `/transactions` location for Cadence transactions goes in this folder
-- `/tests` all the integration tests for your dapp and Cadence tests go into this folder
+* `/contracts` location for Cadence contracts go in this folder
+* `/scripts` location for Cadence scripts goes here
+* `/transactions` location for Cadence transactions goes in this folder
+* `/tests` all the integration tests for your dapp and Cadence tests go into this folder
 
 ### 👨‍💻 Start Developing
 
@@ -83,6 +92,6 @@ import "Foo"
 
 ### Further Reading
 
-- Cadence Language Reference <https://developers.flow.com/cadence/language>
-- Flow Smart Contract Project Development Standards <https://developers.flow.com/cadence/style-guide/project-development-tips>
-- Cadence anti-patterns <https://developers.flow.com/cadence/anti-patterns>
+* Cadence Language Reference <https://developers.flow.com/cadence/language>
+* Flow Smart Contract Project Development Standards <https://developers.flow.com/cadence/style-guide/project-development-tips>
+* Cadence anti-patterns <https://developers.flow.com/cadence/anti-patterns>
