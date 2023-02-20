@@ -1,0 +1,8 @@
+{
+	"files.exclude": {
+		"**/node_modules": true,
+		"**/.vercel": true,
+		"**/.svelte-kit": true
+	},
+	"cSpell.words": ["Crediflow", "devnet", "Flowser", "pico", "picocss"]
+}

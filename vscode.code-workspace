@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "network-state",
+			"path": "./cadence"
+		},
+		{
+			"name": "frontend",
+			"path": "./web"
+		},
+		{
+			"name": "root",
+			"path": "."
+		}
+	]
+}
