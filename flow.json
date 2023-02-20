@@ -4,8 +4,7 @@
     "FlowUtilityToken": "cadence/contracts/FlowUtilityToken.cdc",
     "FungibleToken": "cadence/contracts/FungibleToken.cdc",
     "MetadataViews": "cadence/contracts/MetadataViews.cdc",
-    "NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc",
-    "Person": "cadence/contracts/Person.cdc"
+    "NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc"
   },
   "networks": {
     "emulator": "127.0.0.1:3569",
@@ -14,8 +13,8 @@
   },
   "accounts": {
     "default": {
-      "address": "120e725050340cab",
-      "key": "8fec2fa42048f25b67f89cad6d66386ee08c9545d95083f1e63eaca5f090c466"
+      "address": "f4a3472b32eac8d8",
+      "key": "70343062129503576c16f4c1a63b7e89fcafffcb4e20c74aa320c6fe7381dec1"
     },
     "emulator-account": {
       "address": "f8d6e0586b0a20c7",
@@ -29,8 +28,7 @@
         "FlowUtilityToken",
         "FungibleToken",
         "MetadataViews",
-        "NonFungibleToken",
-        "Person"
+        "NonFungibleToken"
       ]
     }
   }
