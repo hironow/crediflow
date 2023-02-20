@@ -1,5 +1,5 @@
-import FlowToken from "../contracts/FlowToken.cdc"
-import ExampleCrediflow from "../contracts/ExampleCrediflow.cdc"
+import FlowToken from "../contracts/core/FlowToken.cdc"
+import ExampleCrediflow from "../contracts/example/ExampleCrediflow.cdc"
 
 transaction() {
 

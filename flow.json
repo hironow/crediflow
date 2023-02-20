@@ -1,35 +1,51 @@
 {
-  "contracts": {
-    "FlowToken": "cadence/contracts/FlowToken.cdc",
-    "FlowUtilityToken": "cadence/contracts/FlowUtilityToken.cdc",
-    "FungibleToken": "cadence/contracts/FungibleToken.cdc",
-    "MetadataViews": "cadence/contracts/MetadataViews.cdc",
-    "NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc"
-  },
-  "networks": {
-    "emulator": "127.0.0.1:3569",
-    "mainnet": "access.mainnet.nodes.onflow.org:9000",
-    "testnet": "access.devnet.nodes.onflow.org:9000"
-  },
-  "accounts": {
-    "default": {
-      "address": "f4a3472b32eac8d8",
-      "key": "70343062129503576c16f4c1a63b7e89fcafffcb4e20c74aa320c6fe7381dec1"
-    },
-    "emulator-account": {
-      "address": "f8d6e0586b0a20c7",
-      "key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-    }
-  },
-  "deployments": {
-    "emulator": {
-      "default": [
-        "FlowToken",
-        "FlowUtilityToken",
-        "FungibleToken",
-        "MetadataViews",
-        "NonFungibleToken"
-      ]
-    }
-  }
+	"contracts": {
+		"Crediflow": "cadence/contracts/Crediflow.cdc",
+		"ExampleCrediflow": "cadence/contracts/example/ExampleCrediflow.cdc",
+		"FlowToken": "cadence/contracts/core/FlowToken.cdc",
+		"FlowUtilityToken": "cadence/contracts/core/FlowUtilityToken.cdc",
+		"FungibleToken": "cadence/contracts/core/FungibleToken.cdc",
+		"MetadataViews": "cadence/contracts/core/MetadataViews.cdc",
+		"NonFungibleToken": "cadence/contracts/core/NonFungibleToken.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"core": {
+			"address": "f8d6e0586b0a20c5",
+			"key": "83c4da8100a5bb0086fd0835e0b48dbdf507ca4aa15dab56edccee06c82eb110"
+		},
+		"default": {
+			"address": "f8d6e0586b0a20c4",
+			"key": "70343062129503576c16f4c1a63b7e89fcafffcb4e20c74aa320c6fe7381dec1"
+		},
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		},
+		"example": {
+			"address": "f8d6e0586b0a20c6",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		}
+	},
+	"deployments": {
+		"emulator": {
+			"core": [
+				"FlowToken",
+				"FlowUtilityToken",
+				"FungibleToken",
+				"MetadataViews",
+				"NonFungibleToken"
+			],
+			"default": [
+				"Crediflow"
+			],
+			"example": [
+				"ExampleCrediflow"
+			]
+		}
+	}
 }
