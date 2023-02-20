@@ -1,26 +1,30 @@
 <svelte:head>
 	<title>About</title>
-	<meta name="description" content="About this app" />
 </svelte:head>
 
-<div class="text-column">
+<div class="container">
 	<h1>About this app</h1>
 
 	<p>
-		This is a <a href="https://kit.svelte.dev">SvelteKit</a> app. You can make your own by typing the
-		following into your command line and following the prompts:
+		This is a <a href="https://developers.flow.com/fcl">FCL-powered</a> app built on
+		<a href="https://developers.flow.com">Flow</a>.
 	</p>
 
-	<pre>npm create svelte@latest</pre>
+	<p>This app shows how to:</p>
+	<ul>
+		<li>Authenticate a user on the Flow blockchain.</li>
+		<li>
+			Import a contract to let a user create a profile and query the blockchain for their data.
+		</li>
+		<li>Let a user modify their profile and mutate the blockchain to save changes.</li>
+	</ul>
 
 	<p>
-		The page you're looking at is purely static HTML, with no client-side interactivity needed.
-		Because of that, we don't need to load any JavaScript. Try viewing the page's source, or opening
-		the devtools network panel and reloading.
-	</p>
-
-	<p>
-		The <a href="/sverdle">Sverdle</a> page illustrates SvelteKit's data loading and form handling. Try
-		using it with JavaScript disabled!
+		Use this app as a starting template to build your very own web3 app, powered on Flow! Flow is a
+		fast, decentralized, and developer-friendly blockchain, designed as the foundation for a new
+		generation of games, apps, and the digital assets that power them. It is based on a unique,
+		multi-role architecture, and designed to scale without sharding, allowing for massive
+		improvements in speed and throughput while preserving a developer-friendly, ACID-compliant
+		environment.
 	</p>
 </div>
