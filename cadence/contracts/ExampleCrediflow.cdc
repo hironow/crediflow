@@ -1,4 +1,4 @@
-import FlowToken from 0x0ae53cb6e3f42a79
+import FungibleToken from "./FungibleToken.cdc"
 import Crediflow from "./Crediflow.cdc"
 
 // Example of implementation of the Crediflow interface.
@@ -17,12 +17,12 @@ pub contract ExampleCrediflow: Crediflow {
             self.total = 0.0
         }
 
-        pub fun claim(): @FlowToken.Vault {
+        pub fun claim(): @FungibleToken.Vault {
             // NOTE: 1.0 is adhoc value for testing
             let amount = 1.0
             // TODO: account resource から取り出す
             self.total = self.total + amount
-            return <-create FlowToken.Vault(balance: amount)
+            return <-create FungibleToken.Vault(balance: amount)
         }
     }
 
@@ -33,7 +33,7 @@ pub contract ExampleCrediflow: Crediflow {
             self.total = 0.0
         }
 
-        pub fun tip(token: @FlowToken.Vault) {
+        pub fun tip(token: @FungibleToken.Vault) {
             // TODO: account resource に入れる
             self.total = self.total + token.balance
             destroy token
