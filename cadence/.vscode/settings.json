@@ -1,4 +1,6 @@
 {
-  "files.exclude": {},
+  "files.exclude": {
+    "contracts/core": true,
+  },
   "cSpell.words": ["Crediflow", "devnet", "Flowser"]
 }
