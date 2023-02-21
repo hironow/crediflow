@@ -43,10 +43,10 @@ pub contract Crediflow {
         }
     }
 
-    // A Collection that claims all of the users Crediflow.
+    // A Collection that claims all of the Creator Crediflow.
     pub resource CreatorCollection {}
 
-    // A Collection that tips all of the users Crediflow.
+    // A Collection that tips all of the Consumer Crediflow.
     pub resource ConsumerCollection {}
 
     pub resource CrediflowContent {}
