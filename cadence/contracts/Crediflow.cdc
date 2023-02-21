@@ -81,7 +81,7 @@ pub contract Crediflow {
         }
 
         init() {
-            self.contentMap = {}
+            self.contentMap <- {}
         }
 
         destroy() {
