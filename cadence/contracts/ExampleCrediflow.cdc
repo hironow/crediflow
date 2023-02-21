@@ -7,7 +7,7 @@ pub contract ExampleCrediflow: Crediflow {
     pub resource CreatorNFT {
     }
 
-    pub resource ConsumerNFT {
+    pub resource AdmirerNFT {
     }
 
     pub resource CreatorNFTVault {
@@ -26,7 +26,7 @@ pub contract ExampleCrediflow: Crediflow {
         }
     }
 
-    pub resource ConsumerNFTVault {
+    pub resource AdmirerNFTVault {
         pub var total: UFix64
 
         init() {
@@ -51,7 +51,7 @@ pub contract ExampleCrediflow: Crediflow {
         let newCreatorNFT <- create CreatorNFT()
         self.account.save(<-newCreatorNFT, to: /storage/exampleCrediflowCreatorNFT)
 
-        let newCustomerNFT <- create ConsumerNFT()
-        self.account.save(<-newCustomerNFT, to: /storage/exampleCrediflowConsumerNFT)
+        let newCustomerNFT <- create AdmirerNFT()
+        self.account.save(<-newCustomerNFT, to: /storage/exampleCrediflowAdmirerNFT)
     }
 }

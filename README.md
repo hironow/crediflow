@@ -1,20 +1,17 @@
 # Crediflow
 
-ver. 0.0.0 (draft)
+ver. 0.0.0
 
-エンドクレジットNFT:「Credit」と「Flow」を組み合わせた造語で、エンドクレジットのシステムを表しています。
-
-[product detail](./docs/ja/detail-ja.md) | [product contract sequence](./docs/ja/sequence-ja.md)
-※現時点ではアイデアであり、実装をはじめたばかりです
+[product detail (ja)](./docs/ja/detail-ja.md) | [product contract sequence (ja)](./docs/ja/sequence-ja.md)
 
 ## Glossary
 
-* Crediflow: The name of the system, derived from "Credit" and "Flow".
-* Creator: A content creator, such as a movie, anime, or game producer.
-* Consumer: An individual who watches a movie, anime, or plays a game.
-* Pool: Crediflow's liquidity pool.
-* Claim: The process by which a Creator can withdraw FT from the pool.
-* Tip: The process by which a Consumer can deposit FT into the pool.
+* `Crediflow` is a name that combines the words "Credit" and "Flow" to refer to a new system, inspired by the end credits found in movies and other media.
+* A `Creator` is someone who creates content such as movies, anime, or games.
+* An `Admirer` is a fan of movies, anime, games, and the like who wants to show appreciation or respect by tipping.
+* `Pool` refers to Crediflow's liquidity pool.
+* `Claim` is the process that allows a Creator to withdraw FT from the pool.
+* `Tip` is the process that allows an Admirer to deposit FT into the pool as a form of admiration and respect towards the Creator.
 
 ---
 

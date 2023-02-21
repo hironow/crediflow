@@ -8,8 +8,8 @@ pub contract Crediflow {
     pub let CrediflowCreatorCollectionStoragePath: StoragePath
     pub let CrediflowCreatorCollectionPublicPath: PublicPath
 
-    pub let CrediflowConsumerCollectionStoragePath: StoragePath
-    pub let CrediflowConsumerCollectionPublicPath: PublicPath
+    pub let CrediflowAdmirerCollectionStoragePath: StoragePath
+    pub let CrediflowAdmirerCollectionPublicPath: PublicPath
 
     pub let CrediflowContainerStoragePath: StoragePath
     pub let CrediflowContainerPublicPath: PublicPath
@@ -20,7 +20,7 @@ pub contract Crediflow {
 
     // STATE
     pub var totalCreatorSupply: UInt64
-    pub var totalConsumerSupply: UInt64
+    pub var totalAdmirerSupply: UInt64
     pub var totalCrediflowContainer: UInt64
 
     // STRUCT
@@ -62,15 +62,15 @@ pub contract Crediflow {
 
     pub resource interface CrediflowContentPublic {
         pub fun claimFromCreator()
-        pub fun tipFromConsumer(token: @FungibleToken.Vault)
+        pub fun tipFromAdmirer(token: @FungibleToken.Vault)
     }
 
     pub resource interface CrediflowContainerPublic {
         pub fun borrowPublicContentRef(contentId: UInt64): &CrediflowContent{CrediflowContentPublic}?
     }
 
-    // Represents a creator NFT has a claimable Crediflow.
-    // TODO: MetadataViews
+    // Represents a Creator NFT has a claimable Crediflow.
+    // TODO: MetadataViews, impl profile like a .find
     pub resource CreatorNFT: NonFungibleToken.INFT, Claimer {
         // The `uuid` of this resource
         pub let id: UInt64
@@ -96,9 +96,9 @@ pub contract Crediflow {
         }
     }
 
-    // Represents a consumer NFT has a tipable Crediflow.
-    // TODO: MetadataViews
-    pub resource ConsumerNFT: NonFungibleToken.INFT, Tipper {
+    // Represents a Admirer NFT has a tipable Crediflow.
+    // TODO: MetadataViews, impl profile like a .find
+    pub resource AdmirerNFT: NonFungibleToken.INFT, Tipper {
         // The `uuid` of this resource
         pub let id: UInt64
         pub let contentHost: Address
@@ -119,7 +119,7 @@ pub contract Crediflow {
                 .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
 
             // emit EVENT
-            Crediflow.totalConsumerSupply = Crediflow.totalConsumerSupply + 1
+            Crediflow.totalAdmirerSupply = Crediflow.totalAdmirerSupply + 1
         }
     }
 
@@ -158,9 +158,9 @@ pub contract Crediflow {
         }
     }
 
-    // A Collection that tips all of the Consumer Crediflow.
+    // A Collection that tips all of the Admirer Crediflow.
     // TODO: MetadataViews
-    pub resource ConsumerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource AdmirerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         pub fun deposit(token: @NonFungibleToken.NFT) {
@@ -205,7 +205,7 @@ pub contract Crediflow {
             // impl
             // royaltyは実装しない
         }
-        pub fun tipFromConsumer(token: @FungibleToken.Vault) {
+        pub fun tipFromAdmirer(token: @FungibleToken.Vault) {
             // impl
             // royaltyは実装しない
             // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
@@ -261,8 +261,8 @@ pub contract Crediflow {
         return <- create CreatorCollection()
     }
 
-    pub fun createEmptyConsumerCollection(): @ConsumerCollection {
-        return <- create ConsumerCollection()
+    pub fun createEmptyAdmirerCollection(): @AdmirerCollection {
+        return <- create AdmirerCollection()
     }
 
     pub fun createEmptyCrediflowContainer(): @CrediflowContainer {
@@ -271,15 +271,15 @@ pub contract Crediflow {
 
     init() {
         self.totalCreatorSupply = 0
-        self.totalConsumerSupply = 0
+        self.totalAdmirerSupply = 0
         self.totalCrediflowContainer = 0
         emit ContractInitialized()
 
         self.CrediflowCreatorCollectionStoragePath = /storage/crediflowCreatorCollectionStoragePath
         self.CrediflowCreatorCollectionPublicPath = /public/crediflowCreatorCollectionPublicPath
 
-        self.CrediflowConsumerCollectionStoragePath = /storage/crediflowConsumerCollectionStoragePath
-        self.CrediflowConsumerCollectionPublicPath = /public/crediflowConsumerCollectionPublicPath
+        self.CrediflowAdmirerCollectionStoragePath = /storage/crediflowAdmirerCollectionStoragePath
+        self.CrediflowAdmirerCollectionPublicPath = /public/crediflowAdmirerCollectionPublicPath
 
         self.CrediflowContainerStoragePath = /storage/crediflowContainerStoragePath
         self.CrediflowContainerPublicPath = /public/crediflowContainerPublicPath
