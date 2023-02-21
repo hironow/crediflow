@@ -23,6 +23,23 @@ pub contract Crediflow {
     pub var totalConsumerSupply: UInt64
     pub var totalCrediflowContainer: UInt64
 
+    // STRUCT
+    pub struct RoleIdentifier {
+        pub let id: UInt64
+        pub let address: Address
+        pub let serial: UInt64
+
+        pub let role: String
+
+        init(_id: UInt64, _address: Address, _serial: UInt64, _role: String) {
+            self.id = _id
+            self.address = _address
+            self.serial = _serial
+            self.role = _role
+        }
+    }
+
+
     pub resource interface Counter {
         pub var total: UFix64
     }
@@ -43,16 +60,166 @@ pub contract Crediflow {
         }
     }
 
+    pub resource interface CrediflowContentPublic {
+        pub fun claimFromCreator()
+        pub fun tipFromConsumer(token: @FungibleToken.Vault)
+    }
+
+    pub resource interface CrediflowContainerPublic {
+        pub fun borrowPublicContentRef(contentId: UInt64): &CrediflowContent{CrediflowContentPublic}?
+    }
+
+    // Represents a creator NFT has a claimable Crediflow.
+    // TODO: MetadataViews
+    pub resource CreatorNFT: NonFungibleToken.INFT, Claimer {
+        // The `uuid` of this resource
+        pub let id: UInt64
+        pub let contentHost: Address
+
+        // このcapabilityを経由してclaimする
+        pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
+
+        pub fun claim(): @FungibleToken.Vault {
+            // impl
+        }
+
+        init(_contentHost: Address) {
+            self.id = self.uuid
+            self.contentHost = _contentHost
+
+            // Store a reference to the CrediflowContainer in the account storage
+            self.containerCap = getAccount(_contentHost)
+                .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
+
+            // emit EVENT
+            Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
+        }
+    }
+
+    // Represents a consumer NFT has a tipable Crediflow.
+    // TODO: MetadataViews
+    pub resource ConsumerNFT: NonFungibleToken.INFT, Tipper {
+        // The `uuid` of this resource
+        pub let id: UInt64
+        pub let contentHost: Address
+
+        // このcapabilityを経由してtipする
+        pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
+
+        pub fun tip(token: @FungibleToken.Vault) {
+            // impl
+        }
+
+        init(_contentHost: Address) {
+            self.id = self.uuid
+            self.contentHost = _contentHost
+
+            // Store a reference to the CrediflowContainer in the account storage
+            self.containerCap = getAccount(_contentHost)
+                .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
+
+            // emit EVENT
+            Crediflow.totalConsumerSupply = Crediflow.totalConsumerSupply + 1
+        }
+    }
+
     // A Collection that claims all of the Creator Crediflow.
-    pub resource CreatorCollection {}
+    // TODO: MetadataViews
+    pub resource CreatorCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+        pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
+
+        pub fun deposit(token: @NonFungibleToken.NFT) {
+            // impl
+        }
+
+        pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
+            // impl
+        }
+
+        pub fun getIDs(): [UInt64] {
+            let ids: [UInt64] = []
+            for key in self.ownedNFTs.keys {
+                let nftRef = self.borrowNFT(id: key)!
+                ids.append(key)
+            }
+            return ids
+        }
+
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
+        }
+
+        init() {
+            self.ownedNFTs <- {}
+        }
+
+        destroy() {
+            destroy self.ownedNFTs
+        }
+    }
 
     // A Collection that tips all of the Consumer Crediflow.
-    pub resource ConsumerCollection {}
+    // TODO: MetadataViews
+    pub resource ConsumerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+        pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
-    pub resource CrediflowContent {}
+        pub fun deposit(token: @NonFungibleToken.NFT) {
+            // impl
+        }
+
+        pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
+            // impl
+        }
+
+        pub fun getIDs(): [UInt64] {
+            let ids: [UInt64] = []
+            for key in self.ownedNFTs.keys {
+                let nftRef = self.borrowNFT(id: key)!
+                ids.append(key)
+            }
+            return ids
+        }
+
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
+        }
+
+        init() {
+            self.ownedNFTs <- {}
+        }
+
+        destroy() {
+            destroy self.ownedNFTs
+        }
+    }
+
+    // TODO: MetadataViews
+    pub resource CrediflowContent: CrediflowContentPublic {
+        // This is equal to this resource's uuid
+        pub let contentId: UInt64
+
+        pub var totalClaim: UInt64
+        pub var totalTip: UInt64
+
+        pub fun claimFromCreator() {
+            // impl
+            // royaltyは実装しない
+        }
+        pub fun tipFromConsumer(token: @FungibleToken.Vault) {
+            // impl
+            // royaltyは実装しない
+            // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
+        }
+
+        init() {
+            self.contentId = self.uuid
+            self.totalClaim = 0
+            self.totalTip = 0
+        }
+    }
 
     // A "Collection" of CrediflowContent
-    pub resource CrediflowContainer {
+    pub resource CrediflowContainer: CrediflowContainerPublic {
         access(account) var contentMap: @{UInt64: CrediflowContent}
 
         pub fun createContent(): UInt64 {
@@ -72,8 +239,8 @@ pub contract Crediflow {
             return &self as &CrediflowContainer
         }
 
-        pub fun borrowContentRef(contentId: UInt64): &CrediflowContent? {
-            return &self.contentMap[contentId] as &CrediflowContent?
+        pub fun borrowPublicContentRef(contentId: UInt64): &CrediflowContent{CrediflowContentPublic}? {
+            return &self.contentMap[contentId] as &CrediflowContent{CrediflowContentPublic}?
         }
 
         pub fun getIDs(): [UInt64] {
