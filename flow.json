@@ -30,8 +30,6 @@
 	"deployments": {
 		"emulator": {
 			"core": [
-				"FlowToken",
-				"FlowUtilityToken",
 				"FungibleToken",
 				"MetadataViews",
 				"NonFungibleToken"
