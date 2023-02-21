@@ -1,7 +1,7 @@
 {
 	"contracts": {
 		"Crediflow": "cadence/contracts/Crediflow.cdc",
-		"ExampleCrediflow": "cadence/contracts/example/ExampleCrediflow.cdc",
+		"ExampleCrediflow": "cadence/contracts/ExampleCrediflow.cdc",
 		"FlowToken": "cadence/contracts/core/FlowToken.cdc",
 		"FlowUtilityToken": "cadence/contracts/core/FlowUtilityToken.cdc",
 		"FungibleToken": "cadence/contracts/core/FungibleToken.cdc",
@@ -15,20 +15,16 @@
 	},
 	"accounts": {
 		"core": {
-			"address": "eb179c27144f783c",
-			"key": "c7271ea2e1c0f742cfadb23e31d04548070bd31c368a12d62aa44a1cf572bf88"
+			"address": "fd43f9148d4b725d",
+			"key": "5052d0d64f64585040e2ab3183010d0268eaf02c57326ea8e7ca19d8b3ee2cb6"
 		},
 		"default": {
-			"address": "f8d6e0586b0a20c4",
-			"key": "70343062129503576c16f4c1a63b7e89fcafffcb4e20c74aa320c6fe7381dec1"
+			"address": "f669cb8d41ce0c74",
+			"key": "10dbd8ec5935864d43057b2476056f5c9b8ac8b17f2c8568dd5f66859e56cf64"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-		},
-		"example": {
-			"address": "0f7025fa05b578e3",
-			"key": "dac1236568653d070418176a8f1b9086230056b0d3e02e28b0b1c692429f59f4"
 		}
 	},
 	"deployments": {
@@ -41,9 +37,7 @@
 				"NonFungibleToken"
 			],
 			"default": [
-				"Crediflow"
-			],
-			"example": [
+				"Crediflow",
 				"ExampleCrediflow"
 			]
 		}
