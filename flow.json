@@ -12,12 +12,12 @@
 	},
 	"accounts": {
 		"core": {
-			"address": "192440c99cb17282",
-			"key": "ce9511ef8700a161b1827c83c7b23ae396f4928afcbe633af76c2252ad6a1296"
+			"address": "fd43f9148d4b725d",
+			"key": "c4b6bbaffffdbdd63c19906eae4e4560185da81e295e2ba57c833167e5a01249"
 		},
 		"default": {
 			"address": "f669cb8d41ce0c74",
-			"key": "b8a6ad7d2fd793410f4bb195d416201cec139bbe3b567489129c7033f843aaa9"
+			"key": "d821f1e5f7058f5614e973f08ffda93e121eecc609c1b08b90c99cb442445c00"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",

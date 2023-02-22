@@ -1,7 +1,6 @@
-import FungibleToken from "./core/FungibleToken.cdc"
-import NonFungibleToken from "./core/NonFungibleToken.cdc"
-import FungibleToken from "./core/FungibleToken.cdc"
-import MetadataViews from "./core/MetadataViews.cdc"
+import FungibleToken from 0xee82856bf20e2aa6 // "./core/FungibleToken.cdc"
+import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./core/NonFungibleToken.cdc"
+import MetadataViews from 0xf8d6e0586b0a20c7 // "./core/MetadataViews.cdc"
 
 pub contract Crediflow {
     // PATHS
@@ -56,6 +55,7 @@ pub contract Crediflow {
     // Represents a NFT has a claimable Crediflow.
     // TODO: MetadataViews.Resolver
     pub resource CreatorNFT: NonFungibleToken.INFT, Claimer {
+        // The `uuid` of this resource
         pub let id: UInt64
 
         // special
@@ -92,6 +92,7 @@ pub contract Crediflow {
     // Represents a NFT has a tipable Crediflow.
     // TODO: MetadataViews.Resolver
     pub resource AdmirerNFT: NonFungibleToken.INFT, Tipper {
+        // The `uuid` of this resource
         pub let id: UInt64
 
         // special
@@ -135,18 +136,18 @@ pub contract Crediflow {
         // takes a NFT and adds it to the collections dictionary
         // and adds the ID to the id array
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @Crediflow.CreatorNFT
-            let id: UInt64 = token.id
+            let nft <- token as! @Crediflow.CreatorNFT
+            let id = nft.id
+            let contentId = nft.contentId
             // add the new token to the dictionary which removes the old one
-            let oldToken <- self.ownedNFTs[id] <- token
             // emit EVENT via Creator
-            destroy oldToken
+            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
         // withdraw
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
-            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing NFT")
+            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing CreatorNFT")
             // emit EVENT via Creator
             return <- token
         }
@@ -184,19 +185,19 @@ pub contract Crediflow {
         // takes a NFT and adds it to the collections dictionary
         // and adds the ID to the id array
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @Crediflow.AdmirerNFT
-            let id: UInt64 = token.id
+            let nft <- token as! @Crediflow.AdmirerNFT
+            let id = nft.id
+            let contentId = nft.contentId
             // add the new token to the dictionary which removes the old one
-            let oldToken <- self.ownedNFTs[id] <- token
-            // emit EVENT via Creator
-            destroy oldToken
+            // emit EVENT via Admirer
+            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
         // withdraw
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
-            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing NFT")
-            // emit EVENT via Creator
+            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing AdmirerNFT")
+            // emit EVENT via Admirer
             return <- token
         }
 
@@ -270,11 +271,12 @@ pub contract Crediflow {
             let serial = self.totalCreatorSupply
 
             // TODO: 許可されたらnft作成
-            let token <- create CreatorNFT(_contentHost: self.contentHost, _contentId: self.contentId)
-            let id = token.id
+            let nft <- create CreatorNFT(_contentHost: self.contentHost, _contentId: self.contentId)
+            let id = nft.id
 
             self.creatorMap[recipentAddr] = TokenIdentifier(_id: id, _address: recipentAddr, _serial: 0)
             self.totalCreatorSupply = self.totalCreatorSupply + 1
+            let token <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- token)
 
             return id
@@ -288,11 +290,12 @@ pub contract Crediflow {
             let serial = self.totalAdmirerSupply
 
             // nft作成
-            let token <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
-            let id = token.id
+            let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
+            let id = nft.id
 
             self.admirerMap[recipentAddr] = TokenIdentifier(_id: id, _address: recipentAddr, _serial: 0)
             self.totalAdmirerSupply = self.totalAdmirerSupply + 1
+            let token <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- token)
 
             return id
