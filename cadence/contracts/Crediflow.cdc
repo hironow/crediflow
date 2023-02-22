@@ -1,4 +1,4 @@
-import FungibleToken from "./FungibleToken.cdc"
+import FungibleToken from "./core/FungibleToken.cdc"
 import NonFungibleToken from "./core/NonFungibleToken.cdc"
 import FungibleToken from "./core/FungibleToken.cdc"
 import MetadataViews from "./core/MetadataViews.cdc"
@@ -37,11 +37,6 @@ pub contract Crediflow {
             self.serial = _serial
             self.role = _role
         }
-    }
-
-
-    pub resource interface Counter {
-        pub var total: UFix64
     }
 
     pub resource interface Claimer {
@@ -202,14 +197,23 @@ pub contract Crediflow {
         pub var totalTip: UInt64
 
         pub fun claimFromCreator() {
-            // impl
+            // impl: nftを引き受けてもいいかも、なにかを記録するため
             // royaltyは実装しない
         }
         pub fun tipFromAdmirer(token: @FungibleToken.Vault) {
-            // impl
+            // impl: nftを引き受けてもいいかも、なにかを記録するため
             // royaltyは実装しない
             // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
         }
+
+        // pub fun isClaimable(): Bool {
+        //     // impl
+        // }
+
+        // pub fun isTipable(): Bool {
+        //     // 時限性を実装するならここで
+        //     return true
+        // }
 
         init() {
             self.contentId = self.uuid

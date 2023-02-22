@@ -9,7 +9,7 @@ transaction(amount: UFix64) {
     execute {
         let params: {String: AnyStruct} = {}
 
-        // tip
+        // tip & mint nft
     }
 
     post {}

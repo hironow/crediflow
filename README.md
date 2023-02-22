@@ -10,8 +10,10 @@ ver. 0.0.0
 * A `Creator` is someone who creates content such as movies, anime, or games.
 * An `Admirer` is a fan of movies, anime, games, and the like who wants to show appreciation or respect by tipping.
 * `Pool` refers to Crediflow's liquidity pool.
-* `Claim` is the process that allows a Creator to withdraw FT from the pool.
-* `Tip` is the process that allows an Admirer to deposit FT into the pool as a form of admiration and respect towards the Creator.
+* `Claim` is the process that allows a Creator to withdraw FT from the Pool.
+* `Tip` is the process that allows an Admirer to deposit FT into the Pool as a form of admiration and respect towards the Creator.
+
+This contract does not define anything like royalties. This is because if this contract considers itself content, it will benefit from its Crediflow.
 
 ---
 
