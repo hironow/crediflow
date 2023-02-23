@@ -267,14 +267,12 @@ pub contract Crediflow {
 
         pub fun requestClaim(): @FungibleToken.Vault {
             // impl
-            // royaltyは実装しない
             // Poolからtokenを引き出す
             self.totalClaim = self.totalClaim + 1
         }
 
         pub fun requestTip(token: @FungibleToken.Vault) {
             // impl
-            // royaltyは実装しない
             // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
             self.totalTip = self.totalTip + 1
         }
@@ -400,7 +398,7 @@ pub contract Crediflow {
             let contentIDs = self.getIDs()
 
             for contentID in contentIDs {
-                self.closePool(contentId: contentID)
+                // self.closePool(contentId: contentID)
             }
 
             destroy self.contentMap
