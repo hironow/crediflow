@@ -15,6 +15,25 @@ ver. 0.0.0
 
 This contract does not define anything like royalties. This is because if this contract considers itself content, it will benefit from its Crediflow.
 
+## Methods
+
+### Scripts
+
+```txt
+getContent
+getCreatorMap
+getAdmirerMap
+```
+
+### Transactions
+
+```txt
+beCreator
+beAdmirer
+claim
+tip
+```
+
 ---
 
 ### 👋 Welcome Flow Developer
