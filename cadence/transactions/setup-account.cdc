@@ -21,11 +21,7 @@ transaction() {
         }
     }
 
-    pre {}
-
     execute {
-        log("Finished setting up the account for Crediflow")
+        log("Finished setting up the account for Crediflow.")
     }
-
-    post {}
 }

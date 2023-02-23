@@ -238,6 +238,9 @@ pub contract Crediflow {
     pub resource interface CrediflowContentPublic {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(token: @FungibleToken.Vault)
+        pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64
+        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}): UInt64
+
         // pub fun closePool()
     }
 
