@@ -23,7 +23,19 @@ pub contract Crediflow {
     pub var totalCrediflowContainer: UInt64
 
     // STRUCT
-    pub struct TokenIdentifier {
+    pub struct NFTIdentifier {
+        pub let id: UInt64
+        pub let address: Address
+        pub let serial: UInt64
+
+        init(_id: UInt64, _address: Address, _serial: UInt64) {
+            self.id = _id
+            self.address = _address
+            self.serial = _serial
+        }
+    }
+
+    pub struct ProcessIdentifier {
         pub let id: UInt64
         pub let address: Address
         pub let serial: UInt64
@@ -226,6 +238,7 @@ pub contract Crediflow {
     pub resource interface CrediflowContentPublic {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(token: @FungibleToken.Vault)
+        // pub fun closePool()
     }
 
     //
@@ -239,13 +252,13 @@ pub contract Crediflow {
         // The name of this Crediflow Content
         pub let contentName: String
 
-        access(account) var creatorMap: {Address: TokenIdentifier}
-        access(account) var admirerMap: {Address: TokenIdentifier}
+        access(account) var creatorMap: {Address: NFTIdentifier}
+        access(account) var admirerMap: {Address: NFTIdentifier}
         pub var totalCreatorSupply: UInt64
         pub var totalAdmirerSupply: UInt64
 
-        access(account) var claimed: {Address: TokenIdentifier}
-        access(account) var tipped: {Address: TokenIdentifier}
+        access(account) var claimed: {Address: ProcessIdentifier}
+        access(account) var tipped: {Address: ProcessIdentifier}
         pub var totalClaim: UInt64
         pub var totalTip: UInt64
 
@@ -274,7 +287,7 @@ pub contract Crediflow {
             let nft <- create CreatorNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.creatorMap[recipentAddr] = TokenIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.creatorMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
             self.totalCreatorSupply = self.totalCreatorSupply + 1
             let token <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- token)
@@ -293,7 +306,7 @@ pub contract Crediflow {
             let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.admirerMap[recipentAddr] = TokenIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.admirerMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
             self.totalAdmirerSupply = self.totalAdmirerSupply + 1
             let token <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- token)
@@ -378,8 +391,15 @@ pub contract Crediflow {
             self.contentMap <- {}
         }
 
+        /// Close all the Pools before destroying everything
+        /// This uses the closePool method, so it will panic if there are still tokens staked in any of the objects
         destroy() {
-            // すでにtip残高があれば失敗したい ※危険FTの burn に相当する
+            let contentIDs = self.getIDs()
+
+            for contentID in contentIDs {
+                self.closePool(contentId: contentID)
+            }
+
             destroy self.contentMap
         }
     }
