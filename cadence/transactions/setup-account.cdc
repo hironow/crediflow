@@ -1,17 +1,15 @@
-import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./core/NonFungibleToken.cdc"
-import Crediflow from 0x192440c99cb17282 // "../contracts/Crediflow.cdc"
+import FlowToken from 0x0ae53cb6e3f42a79
+import FungibleToken from 0xee82856bf20e2aa6
+import NonFungibleToken from 0xf8d6e0586b0a20c7
+import Crediflow from 0x0dbaa95c7691bc4f
 
 transaction() {
     // single signer
     prepare(acct: AuthAccount) {
         // SETUP Crediflow NFT Collection
-        if acct.borrow<&Crediflow.CreatorCollection>(from: Crediflow.CrediflowCreatorCollectionStoragePath) == nil {
-            acct.save(<-Crediflow.createEmptyCreatorCollection(), to: Crediflow.CrediflowCreatorCollectionStoragePath)
-            acct.link<&Crediflow.CreatorCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowCreatorCollectionPublicPath, target: Crediflow.CrediflowCreatorCollectionStoragePath)
-        }
-        if acct.borrow<&Crediflow.AdmirerCollection>(from: Crediflow.CrediflowAdmirerCollectionStoragePath) == nil {
-            acct.save(<-Crediflow.createEmptyAdmirerCollection(), to: Crediflow.CrediflowAdmirerCollectionStoragePath)
-            acct.link<&Crediflow.AdmirerCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowAdmirerCollectionPublicPath, target: Crediflow.CrediflowAdmirerCollectionStoragePath)
+        if acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath) == nil {
+            acct.save(<-Crediflow.createEmptyCollection(), to: Crediflow.CrediflowCollectionStoragePath)
+            acct.link<&Crediflow.Collection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowCollectionPublicPath, target: Crediflow.CrediflowCollectionStoragePath)
         }
 
         // SETUP Crefiflow Container

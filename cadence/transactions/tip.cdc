@@ -1,5 +1,7 @@
 import FlowToken from 0x0ae53cb6e3f42a79
-import Crediflow from 0x192440c99cb17282 // "../contracts/Crediflow.cdc"
+import FungibleToken from 0xee82856bf20e2aa6
+import NonFungibleToken from 0xf8d6e0586b0a20c7
+import Crediflow from 0x0dbaa95c7691bc4f
 
 transaction(amount: UFix64) {
 

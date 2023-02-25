@@ -39,9 +39,13 @@ tip
 ### Scripts Shortcut
 
 ```script
+> flow transactions send cadence/transactions/core/mint-tokens.cdc 0x1e7bd52309d4e4b4 1000.0
+
 > flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Test"
 
-> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 60 0xeb179c27144f783c
+> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 60 0x1e7bd52309d4e4b4
+
+> flow transactions send --signer emulator-hironow cadence/transactions/be-admirer.cdc 60 0x1e7bd52309d4e4b4 1.0
 ```
 
 ---
