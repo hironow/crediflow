@@ -31,8 +31,8 @@
 					>
 				</div>
 				<h2>Controls</h2>
-				<button on:click={initAccount}>Create Profile</button>
-				<button on:click={() => sendQuery($user.addr)}>Load Profile</button>
+				<button on:click={initAccount}>Create Content</button>
+				<button on:click={() => sendQuery($user.addr)}>Load Content</button>
 			</div>
 		{:else}
 			<div>

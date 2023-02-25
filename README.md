@@ -68,6 +68,8 @@ flow transactions send --signer emulator-admirer cadence/transactions/process-ti
 export CREDIFLOW_CREATOR_NFT_ID=<id>
 
 flow transactions send --signer emulator-creator cadence/transactions/process-claim.cdc $CREDIFLOW_CREATOR_NFT_ID
+
+flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
 ```
 
 ---

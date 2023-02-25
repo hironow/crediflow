@@ -4,5 +4,12 @@
 		"**/.vercel": true,
 		"**/.svelte-kit": true
 	},
-	"cSpell.words": ["Crediflow", "devnet", "Flowser", "pico", "picocss"]
+	"cSpell.words": [
+		"Crediflow",
+		"devnet",
+		"Flowser",
+		"pico",
+		"picocss",
+		"unauthenticate"
+	]
 }

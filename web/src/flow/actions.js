@@ -59,6 +59,48 @@ export const initAccount = async () => {
 	}
 };
 
+export const createContent = async () => {
+	let transactionId = false;
+	initTransactionState();
+
+	try {
+		transactionId = await fcl.mutate({
+			cadence: `
+        import Crediflow from 0xCrediflow
+
+        transaction {
+          prepare(account: AuthAccount) {
+            // Only initialize the account if it hasn't already been initialized
+            if (!Profile.check(account.address)) {
+              // This creates and stores the profile in the user's account
+              account.save(<- Profile.new(), to: Profile.privatePath)
+
+              // This creates the public capability that lets applications read the profile's info
+              account.link<&Profile.Base{Profile.Public}>(Profile.publicPath, target: Profile.privatePath)
+            }
+          }
+        }
+      `,
+			payer: fcl.authz,
+			proposer: fcl.authz,
+			authorizations: [fcl.authz],
+			limit: 50
+		});
+
+		txId.set(transactionId);
+
+		fcl.tx(transactionId).subscribe((res) => {
+			transactionStatus.set(res.status);
+			if (res.status === 4) {
+				setTimeout(() => transactionInProgress.set(false), 2000);
+			}
+		});
+	} catch (e) {
+		transactionStatus.set(99);
+		console.log(e);
+	}
+};
+
 // send a transaction to get a user's profile
 export const sendQuery = async (addr) => {
 	let profileQueryResult = false;
@@ -67,6 +109,27 @@ export const sendQuery = async (addr) => {
 		profileQueryResult = await fcl.query({
 			cadence: `
         import Profile from 0xProfile
+
+        pub fun main(address: Address): Profile.ReadOnly? {
+          return Profile.read(address)
+        }
+      `,
+			args: (arg, t) => [arg(addr, t.Address)]
+		});
+		console.log(profileQueryResult);
+		profile.set(profileQueryResult);
+	} catch (e) {
+		console.log(e);
+	}
+};
+
+export const getContent = async (addr) => {
+	let profileQueryResult = false;
+
+	try {
+		profileQueryResult = await fcl.query({
+			cadence: `
+        import Crediflow from 0xCrediflow
 
         pub fun main(address: Address): Profile.ReadOnly? {
           return Profile.read(address)
@@ -108,6 +171,54 @@ export const executeTransaction = async () => {
 				arg(get(profile).name, t.String),
 				arg(get(profile).color, t.String),
 				arg(get(profile).info, t.String)
+			],
+			payer: fcl.authz,
+			proposer: fcl.authz,
+			authorizations: [fcl.authz],
+			limit: 50
+		});
+
+		txId.set(transactionId);
+
+		fcl.tx(transactionId).subscribe((res) => {
+			transactionStatus.set(res.status);
+			if (res.status === 4) {
+				setTimeout(() => transactionInProgress.set(false), 2000);
+			}
+		});
+	} catch (e) {
+		console.log(e);
+		transactionStatus.set(99);
+	}
+};
+
+export const executeTip = async () => {
+	initTransactionState();
+	try {
+		const transactionId = await fcl.mutate({
+			cadence: `
+        import Crediflow from 0xCrediflow
+
+        transaction(name: String, color: String, info: String) {
+          prepare(account: AuthAccount) {
+            account
+              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
+              .setName(name)
+
+            account
+              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
+              .setInfo(info)
+
+            account
+              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
+              .setColor(color)
+          }
+        }
+      `,
+			args: (arg, t) => [
+				arg(get(content).name, t.String),
+				arg(get(content).color, t.String),
+				arg(get(content).info, t.String)
 			],
 			payer: fcl.authz,
 			proposer: fcl.authz,
