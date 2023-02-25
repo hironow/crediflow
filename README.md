@@ -41,7 +41,7 @@ tip
 ```script
 > flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Test"
 
-> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 87 0x0dbaa95c7691bc4f
+> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 60 0xeb179c27144f783c
 ```
 
 ---

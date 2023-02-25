@@ -21,6 +21,7 @@ indent_size = 4
 [*.md]
 indent_size = 4
 trim_trailing_whitespace = false
+insert_final_newline = false
 eclint_indent_style = unset
 
 [Dockerfile]
