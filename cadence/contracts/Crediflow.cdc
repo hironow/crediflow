@@ -35,15 +35,15 @@ pub contract Crediflow {
         }
     }
 
-    pub struct ProcessIdentifier {
+    pub struct ValutProcesser {
         pub let id: UInt64
         pub let address: Address
-        pub let serial: UInt64
+        pub let balance: UInt64
 
-        init(_id: UInt64, _address: Address, _serial: UInt64) {
+        init(_id: UInt64, _address: Address, _balance: UInt64) {
             self.id = _id
             self.address = _address
-            self.serial = _serial
+            self.balance = _balance
         }
     }
 
@@ -239,7 +239,7 @@ pub contract Crediflow {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(token: @FungibleToken.Vault)
         pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}): UInt64
+        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, token: @FungibleToken.Vault): UInt64
 
         // pub fun closePool()
     }
@@ -255,13 +255,15 @@ pub contract Crediflow {
         // The name of this Crediflow Content
         pub let contentName: String
 
+        access(account) var creatorValut: {Address: &FungibleToken.Vault}
+
         access(account) var creatorMap: {Address: NFTIdentifier}
         access(account) var admirerMap: {Address: NFTIdentifier}
         pub var totalCreatorSupply: UInt64
         pub var totalAdmirerSupply: UInt64
 
-        access(account) var claimed: {Address: ProcessIdentifier}
-        access(account) var tipped: {Address: ProcessIdentifier}
+        access(account) var claimed: {Address: ValutProcesser}
+        access(account) var tipped: {Address: ValutProcesser}
         pub var totalClaim: UInt64
         pub var totalTip: UInt64
 
@@ -296,12 +298,14 @@ pub contract Crediflow {
             return id
         }
 
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}): UInt64 {
+        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, token: @FungibleToken.Vault): UInt64 {
             pre {
                 self.admirerMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent AdmirerNFT"
             }
             let recipentAddr: Address = recipient.owner!.address
             let serial = self.totalAdmirerSupply
+
+            // deposit token to Content
 
             // nft作成
             let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
@@ -309,8 +313,8 @@ pub contract Crediflow {
 
             self.admirerMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
             self.totalAdmirerSupply = self.totalAdmirerSupply + 1
-            let token <- nft as! @NonFungibleToken.NFT
-            recipient.deposit(token: <- token)
+            let mintedNft <- nft as! @NonFungibleToken.NFT
+            recipient.deposit(token: <- mintedNft)
 
             return id
         }
@@ -330,6 +334,7 @@ pub contract Crediflow {
             self.contentName = _name
             self.totalCreatorSupply = 0
             self.totalAdmirerSupply = 0
+            self.creatorValut = {} // TODO: 0のValutをつくるべき
             self.creatorMap = {}
             self.admirerMap = {}
             self.claimed = {}
@@ -351,7 +356,6 @@ pub contract Crediflow {
         pub fun createContent(
             name: String,
         ): UInt64 {
-            // 内部にCrediflowContentを作成して、そのIDを返す
             let crediflowContent <- create CrediflowContent(
                 _name: name,
                 _host: self.owner!.address,
