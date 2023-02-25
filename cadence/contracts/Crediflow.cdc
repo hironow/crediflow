@@ -297,13 +297,13 @@ pub contract Crediflow: NonFungibleToken {
         pub fun requestClaim(from: Address): @FungibleToken.Vault {
             pre {
                 self.isClaimable(): "Cannot claim this CrediflowContent"
-                self.creatorMap[from] == nil: "You are not allowed to claim this CrediflowContent"
-                self.creatorValutMap[from] == nil: "You are not allowed to claim this CrediflowContent"
-                self.creatorNFTMap[from] == nil: "You are not allowed to claim this CrediflowContent"
+                self.creatorMap[from] != nil: "You are not allowed to claim this CrediflowContent"
+                self.creatorValutMap[from] != nil: "You are not allowed to claim this CrediflowContent"
+                self.creatorNFTMap[from] != nil: "You are not allowed to claim this CrediflowContent"
             }
             post {
-                self.creatorValutMap[from]?.balance == 0.0: "Should be claimed all balance"
-                self.claimed[from]?.balance == 0.0: "Should be claimed any balance"
+                self.creatorValutMap[from]!.balance == 0.0: "Should be claimed all balance"
+                self.claimed[from]!.balance > 0.0: "Should be claimed any balance"
             }
 
             // claim by own claimable max amount
@@ -312,9 +312,16 @@ pub contract Crediflow: NonFungibleToken {
                 return <- FlowToken.createEmptyVault()
             }
 
+            var newBalance = claimAmount
+            if self.claimed[from] != nil {
+                newBalance = newBalance + self.claimed[from]!.balance
+            }
             self.claimed[from] = ValutProcesser(
-                _address: from,
-                _balance: self.claimed[from]?.balance ?? 0.0 + claimAmount)
+                    _address: from,
+                    _balance: newBalance)
+            self.creatorValutMap[from] = ValutProcesser(
+                    _address: from,
+                    _balance: 0.0)
 
             emit CreatorClaimed(
                 contentId: self.contentId,
@@ -330,10 +337,10 @@ pub contract Crediflow: NonFungibleToken {
         pub fun requestTip(from: Address, token: @FungibleToken.Vault) {
             pre {
                 self.isTipable(): "Cannot tip this CrediflowContent"
-                self.admirerNFTMap[from] == nil: "You are not allowed to tip this CrediflowContent"
+                self.admirerNFTMap[from] != nil: "You are not allowed to tip this CrediflowContent"
             }
             post {
-                self.tipped[from]?.balance == 0.0: "Should be tipped any balance"
+                self.tipped[from]!.balance > 0.0: "Should be tipped any balance"
             }
 
             // split token to each creator
@@ -346,9 +353,13 @@ pub contract Crediflow: NonFungibleToken {
                     _balance: creatorValue.balance + splitTipAmount)
             }
 
+            var newBalance = token.balance
+            if self.tipped[from] != nil {
+                newBalance = newBalance + self.tipped[from]!.balance
+            }
             self.tipped[from] = ValutProcesser(
-                _address: from,
-                _balance: self.tipped[from]?.balance ?? 0.0 + token.balance)
+                    _address: from,
+                    _balance: newBalance)
 
             emit AdmirerTipped(
                 contentId: self.contentId,
