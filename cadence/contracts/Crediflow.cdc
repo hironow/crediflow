@@ -152,15 +152,15 @@ pub contract Crediflow {
 
     pub resource interface CreatorCollectionPublic {
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun borrowCreatorNFT(id: UInt64): &CreatorNFT?
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
     }
 
-    // A Collection of Creator NFTs owned by an account
-    // TODO: MetadataViews.ResolverCollection
+    // A Collection of Creator NFTs owned by an account. TODO: MetadataViews.ResolverCollection
     pub resource CreatorCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         // dictionary of NFT conforming tokens
-        // NFT is a resource type with an `UInt64` ID field
+        // NFT is a resource type with an `UInt64` as uuid field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         // deposit
@@ -189,11 +189,16 @@ pub contract Crediflow {
             return self.ownedNFTs.keys
         }
 
-        // borrowNFT
-        // gets a reference to an CreatorNFT in the collection
-        // so that the caller can read its metadata and call its methods
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
+        }
+
+        pub fun borrowCreatorNFT(id: UInt64): &CreatorNFT? {
+            if self.ownedNFTs[id] != nil {
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+                return ref as! &CreatorNFT
+            }
+            return nil
         }
 
         init() {
@@ -207,15 +212,15 @@ pub contract Crediflow {
 
     pub resource interface AdmirerCollectionPublic {
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun borrowAdmirerNFT(id: UInt64): &AdmirerNFT?
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
     }
 
-    // A Collection that tips all of the Admirer Crediflow.
-    // TODO: MetadataViews.ResolverCollection
+    // A Collection of Admirer NFTs owned by an account. TODO: MetadataViews.ResolverCollection
     pub resource AdmirerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, AdmirerCollectionPublic {
         // dictionary of NFT conforming tokens
-        // NFT is a resource type with an `UInt64` ID field
+        // NFT is a resource type with an `UInt64` as uuid field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         // deposit
@@ -244,11 +249,16 @@ pub contract Crediflow {
             return self.ownedNFTs.keys
         }
 
-        // borrowNFT
-        // gets a reference to an AdmirerNFT in the collection
-        // so that the caller can read its metadata and call its methods
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
+        }
+
+        pub fun borrowAdmirerNFT(id: UInt64): &AdmirerNFT? {
+            if self.ownedNFTs[id] != nil {
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+                return ref as! &AdmirerNFT
+            }
+            return nil
         }
 
         init() {
