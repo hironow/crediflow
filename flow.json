@@ -14,11 +14,11 @@
 	"accounts": {
 		"core": {
 			"address": "fd43f9148d4b725d",
-			"key": "398829b398c49eeaa5398be5186341d99e829d233906d4a6e982554ba10fd0d2"
+			"key": "1373067b1108ab43aa2c0eed8952a10ac34a580cce9c0308be4d60f6b6d94150"
 		},
 		"default": {
 			"address": "f669cb8d41ce0c74",
-			"key": "f1bf44889f3454e2abf6738a3e0fcb971baabe9fce0de20761f370db75ce5981"
+			"key": "deeceeb1d90ac6c26ddfb93eec45ad4736e58107e64f087e28fca8856c6d836d"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",

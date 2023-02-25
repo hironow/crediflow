@@ -1,3 +1,4 @@
+import FlowToken from 0x0ae53cb6e3f42a79 // "./core/FlowToken.cdc"
 import FungibleToken from 0xee82856bf20e2aa6 // "./core/FungibleToken.cdc"
 import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./core/NonFungibleToken.cdc"
 import MetadataViews from 0xf8d6e0586b0a20c7 // "./core/MetadataViews.cdc"
@@ -120,7 +121,7 @@ pub contract Crediflow {
             let content = container.borrowPublicContentRef(contentId: self.contentId)
                 ?? panic("Could not borrow a reference to the Content")
 
-            content.requestTip(token: <-token)
+            content.requestTip(<-token)
         }
 
         init(_contentHost: Address, _contentId: UInt64) {
@@ -237,9 +238,9 @@ pub contract Crediflow {
 
     pub resource interface CrediflowContentPublic {
         pub fun requestClaim(): @FungibleToken.Vault
-        pub fun requestTip(token: @FungibleToken.Vault)
+        pub fun requestTip(_ tokenTipped: @FungibleToken.Vault)
         pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, token: @FungibleToken.Vault): UInt64
+        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64
 
         // pub fun closePool()
     }
@@ -262,7 +263,7 @@ pub contract Crediflow {
         pub var totalAdmirerNFTSupply: UInt64
 
         // Vault of the token that can be claimed
-        access(account) var creatorFTValut: @FungibleToken.Vault
+        pub var creatorFTValut: @FlowToken.Vault
         access(account) var claimed: {Address: ValutProcesser}
         access(account) var tipped: {Address: ValutProcesser}
         pub var totalClaim: UInt64
@@ -274,12 +275,12 @@ pub contract Crediflow {
             }
 
             // Poolからtokenを引き出す
-            let receiveFT <- self.creatorFTValut.withdraw(amount: 1.0)
+            let receiveFT <- self.creatorFTValut.withdraw(amount: 0.001)
             self.totalClaim = self.totalClaim + 1
             return <- receiveFT
         }
 
-        pub fun requestTip(tokenTipped: @FungibleToken.Vault) {
+        pub fun requestTip(_ tokenTipped: @FungibleToken.Vault) {
             pre {
                 self.isTipable(): "Cannot tip this CrediflowContent"
             }
@@ -308,7 +309,7 @@ pub contract Crediflow {
             return id
         }
 
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, token: @FungibleToken.Vault): UInt64 {
+        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64 {
             pre {
                 self.admirerNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent AdmirerNFT"
             }
@@ -316,6 +317,7 @@ pub contract Crediflow {
             let serial = self.totalAdmirerNFTSupply
 
             // deposit token to Content
+            self.creatorFTValut.deposit(from: <-tokenTipped)
 
             // nft作成
             let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
@@ -351,11 +353,15 @@ pub contract Crediflow {
             self.admirerNFTMap = {}
 
             // Valuts
-            self.creatorFTValut <- FungibleToken.createEmptyVault()
+            self.creatorFTValut <- FlowToken.createEmptyVault() as! @FlowToken.Vault
             self.claimed = {}
             self.tipped = {}
             self.totalClaim = 0
             self.totalTip = 0
+        }
+
+        destroy () {
+            destroy self.creatorFTValut
         }
     }
 
