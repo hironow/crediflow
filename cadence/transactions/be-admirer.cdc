@@ -33,8 +33,9 @@ transaction(contentId: UInt64, host: Address, amount: UFix64) {
         let params: {String: AnyStruct} = {}
 
         // tipしないとmintできないようにしたい
+        let payment <- self.FlowTokenVault.withdraw(amount: amount)
 
-        self.Content.mintAdmirer(recipient: self.AdmirerCollection)
+        self.Content.mintAdmirer(recipient: self.AdmirerCollection, tokenTipped: <- payment)
         log("Minted a new Crediflow Admirer NFT for the signer.")
     }
 }
