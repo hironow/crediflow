@@ -60,6 +60,7 @@ pub contract Crediflow {
         }
     }
 
+    // INTERFACE
     pub resource interface Claimer {
         pub fun claim(): @FungibleToken.Vault {
             post {
@@ -190,6 +191,7 @@ pub contract Crediflow {
         destroy () {}
     }
 
+    // PUBLIC COLLECTION INTERFACE
     pub resource interface CreatorCollectionPublic {
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
         pub fun borrowCreatorNFT(id: UInt64): &CreatorNFT?
@@ -256,6 +258,7 @@ pub contract Crediflow {
         }
     }
 
+    // PUBLIC COLLECTION INTERFACE
     pub resource interface AdmirerCollectionPublic {
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
         pub fun borrowAdmirerNFT(id: UInt64): &AdmirerNFT?
@@ -322,6 +325,7 @@ pub contract Crediflow {
         }
     }
 
+    // INTERFACE, not Collection
     pub resource interface CrediflowContentPublic {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(_ tokenTipped: @FungibleToken.Vault)
@@ -451,6 +455,7 @@ pub contract Crediflow {
         }
     }
 
+    // PUBLIC COLLECTION INTERFACE
     pub resource interface CrediflowContainerPublic {
         pub fun borrowPublicContentRef(contentId: UInt64): &CrediflowContent{CrediflowContentPublic}?
     }
