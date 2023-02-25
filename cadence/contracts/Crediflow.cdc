@@ -17,6 +17,13 @@ pub contract Crediflow {
 
     // EVENTS
     pub event ContractInitialized()
+    pub event CreateContent()
+    pub event CreatorDeposit()
+    pub event CreatorWithdraw()
+    pub event AdmirerDeposit()
+    pub event AdmirerWithdraw()
+    pub event CreatorClaimed()
+    pub event AdmirerTipped()
 
     // STATE
     pub var totalCreatorSupply: UInt64
