@@ -36,16 +36,27 @@ claim
 tip
 ```
 
-### Scripts Shortcut
+### Shortcut
 
-```script
-> flow transactions send cadence/transactions/core/mint-tokens.cdc 0x1e7bd52309d4e4b4 1000.0
+```shell
+export CREDIFLOW_HOST=<addr>
+export CREDIFLOW_CREATOR=<addr>
+export CREDIFLOW_ADMIRER=<addr>
+```
 
-> flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Test"
+```shell
+flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMIRER 1000.0
+```
 
-> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 60 0x1e7bd52309d4e4b4
+```shell
+flow scripts execute cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
 
-> flow transactions send --signer emulator-hironow cadence/transactions/be-admirer.cdc 60 0x1e7bd52309d4e4b4 1.0
+
+flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "TestContent"
+
+flow transactions send --signer emulator-creator cadence/transactions/be-creator.cdc 60 $CREDIFLOW_HOST
+
+flow transactions send --signer emulator-admirer cadence/transactions/be-admirer.cdc 60 $CREDIFLOW_HOST 1.0
 ```
 
 ---

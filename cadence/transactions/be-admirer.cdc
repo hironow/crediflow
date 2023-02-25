@@ -1,21 +1,15 @@
 import FlowToken from 0x0ae53cb6e3f42a79
 import FungibleToken from 0xee82856bf20e2aa6
 import NonFungibleToken from 0xf8d6e0586b0a20c7
-import Crediflow from 0xf1365e67d4ab9a42
+import Crediflow from 0xeb179c27144f783c
 
 transaction(contentId: UInt64, host: Address) {
     // REFS
     let Content: &Crediflow.CrediflowContent{Crediflow.CrediflowContentPublic}
     let AdmirerCollection: &Crediflow.Collection
 
-    let FlowTokenVault: &FlowToken.Vault
-
     // single signer
     prepare(acct: AuthAccount) {
-        // check FT prepared for tip
-        self.FlowTokenVault = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
-                            ?? panic("Could not borrow the FlowToken.Vault from the signer.")
-
         // SETUP Crediflow NFT Collection for Admirer
         if acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath) == nil {
             acct.save(<-Crediflow.createEmptyCollection(), to: Crediflow.CrediflowCollectionStoragePath)

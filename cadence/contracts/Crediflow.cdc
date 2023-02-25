@@ -183,8 +183,7 @@ pub contract Crediflow: NonFungibleToken {
     // PUBLIC COLLECTION INTERFACE
     pub resource interface CollectionPublic {
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-        // pub fun borrowCreatorNFT(id: UInt64): &NFT?
-        // pub fun borrowAdmirerNFT(id: UInt64): &NFT?
+        pub fun borrowCrediflowNFT(id: UInt64): &NFT?
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
     }
@@ -225,21 +224,13 @@ pub contract Crediflow: NonFungibleToken {
             return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
         }
 
-        // pub fun borrowCreatorNFT(id: UInt64): &NFT? {
-        //     if self.ownedNFTs[id] != nil {
-        //         let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-        //         return ref as! &NFT
-        //     }
-        //     return nil
-        // }
-
-        // pub fun borrowAdmirerNFT(id: UInt64): &NFT? {
-        //     if self.ownedNFTs[id] != nil {
-        //         let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-        //         return ref as! &NFT
-        //     }
-        //     return nil
-        // }
+        pub fun borrowCrediflowNFT(id: UInt64): &NFT? {
+            if self.ownedNFTs[id] != nil {
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+                return ref as! &NFT
+            }
+            return nil
+        }
 
         pub fun borrowViewResolver(id: UInt64): &{MetadataViews.Resolver} {
             let tokenRef = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
@@ -367,6 +358,7 @@ pub contract Crediflow: NonFungibleToken {
             )
             self.totalTip = self.totalTip + 1
             self.creatorFTPool.deposit(from: <- tokenTipped)
+            // TODO: Slight FT fractions may accumulate by rounding.
         }
 
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64 {
