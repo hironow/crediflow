@@ -18,7 +18,7 @@ transaction(
     }
 
     execute {
-        // available only by account that created,
+        // available only by account,
         // it's should be `error: cannot access `closePool`: function has account access`
         self.Content.closePool()
         log("Closed pool and refunded remaining balance to the admirer.")
