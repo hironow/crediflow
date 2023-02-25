@@ -393,8 +393,8 @@ pub contract Crediflow {
 
             self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalCreatorNFTSupply = self.totalCreatorNFTSupply + 1
-
-            recipient.deposit(token: <- token)
+            let forceToken <- token as! @NonFungibleToken.NFT
+            recipient.deposit(token: <- forceToken)
             return id
         }
 
@@ -414,8 +414,8 @@ pub contract Crediflow {
 
             self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalAdmirerNFTSupply = self.totalAdmirerNFTSupply + 1
-
-            recipient.deposit(token: <- token)
+            let forceToken <- token as! @NonFungibleToken.NFT
+            recipient.deposit(token: <- forceToken)
             return id
         }
 
