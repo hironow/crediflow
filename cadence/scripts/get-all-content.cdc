@@ -1,4 +1,4 @@
-import Crediflow from 0xeb179c27144f783c
+import Crediflow from 0xf669cb8d41ce0c74
 
 pub fun main(account: Address): {UFix64: CrediflowContentMetadata} {
     let crediflowContainer = getAccount(account).getCapability(Crediflow.CrediflowContainerPublicPath).borrow<&Crediflow.CrediflowContainer{Crediflow.CrediflowContainerPublic}>()

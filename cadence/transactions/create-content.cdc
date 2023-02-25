@@ -1,14 +1,12 @@
 import FlowToken from 0x0ae53cb6e3f42a79
 import FungibleToken from 0xee82856bf20e2aa6
 import NonFungibleToken from 0xf8d6e0586b0a20c7
-import Crediflow from 0xeb179c27144f783c
+import Crediflow from 0xf669cb8d41ce0c74
 
 transaction(
     name: String,
     creatorAddressList: [Address],
     creatorRoleList: [String],
-    creatorMetadataKeysList: [[String]],
-    creatorMetadataValuesList: [[AnyStruct]],
 ) {
     // REFS
     let Container: &Crediflow.CrediflowContainer
@@ -16,8 +14,6 @@ transaction(
     // single signer
     prepare(acct: AuthAccount) {
         assert(creatorAddressList.length == creatorRoleList.length, message: "The length of the creator address list and the creator role list must be the same.")
-        assert(creatorRoleList.length == creatorMetadataKeysList.length, message: "The length of the creator role list and the creator metadata key list must be the same.")
-        assert(creatorMetadataKeysList.length == creatorMetadataValuesList.length, message: "The length of the creator metadata key list and the creator metadata value list must be the same.")
 
         // SETUP Crefiflow Container
         if acct.borrow<&Crediflow.CrediflowContainer>(from: Crediflow.CrediflowContainerStoragePath) == nil {
@@ -30,19 +26,19 @@ transaction(
     }
 
     execute {
-        // metadata props
-        let metadataList: [{String: AnyStruct}] = []
-        for i, metadataKeys in creatorMetadataKeysList {
-            var metadataMap: {String: AnyStruct} = {}
-            for j, metadataKey in metadataKeys {
-                metadataMap[metadataKey] = creatorMetadataValuesList[i][j]
-            }
-            metadataList.append(metadataMap)
-        }
+        // TODO: metadata props
+        // let metadataList: [{String: AnyStruct}] = []
+        // for i, metadataKeys in creatorMetadataKeysList {
+        //     var metadataMap: {String: AnyStruct} = {}
+        //     for j, metadataKey in metadataKeys {
+        //         metadataMap[metadataKey] = creatorMetadataValuesList[i][j]
+        //     }
+        //     metadataList.append(metadataMap)
+        // }
         // creator props
         let creatorMap: {Address: Crediflow.RoleIdentifier} = {}
         for idx, creatorAddress in creatorAddressList {
-            creatorMap[creatorAddress] = Crediflow.RoleIdentifier(_address: creatorAddress, _role: creatorRoleList[idx], metadata: metadataList[idx])
+            creatorMap[creatorAddress] = Crediflow.RoleIdentifier(_address: creatorAddress, _role: creatorRoleList[idx], metadata: {})
         }
 
         self.Container.createContent(name: name, creatorMap: creatorMap)
