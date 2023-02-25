@@ -77,6 +77,7 @@ pub contract Crediflow {
         // claim by this Capabilty
         pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
 
+        // claim from the content
         pub fun claim(): @FungibleToken.Vault {
             let container = self.containerCap.borrow()
                 ?? panic("Could not borrow a reference to the CrediflowContainer")
@@ -99,6 +100,8 @@ pub contract Crediflow {
             // emit EVENT via Creator
             Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
         }
+
+        destroy () {}
     }
 
     // An Admirer as an NFT
@@ -114,6 +117,7 @@ pub contract Crediflow {
         // tip by this Capabilty
         pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
 
+        // tip to the content
         pub fun tip(token: @FungibleToken.Vault) {
             let container = self.containerCap.borrow()
                 ?? panic("Could not borrow a reference to the CrediflowContainer")
@@ -121,7 +125,7 @@ pub contract Crediflow {
             let content = container.borrowPublicContentRef(contentId: self.contentId)
                 ?? panic("Could not borrow a reference to the Content")
 
-            content.requestTip(<-token)
+            content.requestTip(<- token)
         }
 
         init(_contentHost: Address, _contentId: UInt64) {
@@ -150,17 +154,17 @@ pub contract Crediflow {
         // and adds the ID to the id array
         pub fun deposit(token: @NonFungibleToken.NFT) {
             let nft <- token as! @Crediflow.CreatorNFT
-            let id = nft.id
+            let id: UInt64 = nft.id
             let contentId = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Creator
-            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
+            self.ownedNFTs[id] <-! nft
         }
 
         // withdraw
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
-            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing CreatorNFT")
+            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this CreatorNFT does not exist")
             // emit EVENT via Creator
             return <- token
         }
@@ -172,7 +176,7 @@ pub contract Crediflow {
         }
 
         // borrowNFT
-        // gets a reference to an NFT in the collection
+        // gets a reference to an CreatorNFT in the collection
         // so that the caller can read its metadata and call its methods
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
@@ -203,13 +207,13 @@ pub contract Crediflow {
             let contentId = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Admirer
-            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
+            self.ownedNFTs[id] <-! nft
         }
 
         // withdraw
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
-            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("missing AdmirerNFT")
+            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this AdmirerNFT does not exist")
             // emit EVENT via Admirer
             return <- token
         }
@@ -221,7 +225,7 @@ pub contract Crediflow {
         }
 
         // borrowNFT
-        // gets a reference to an NFT in the collection
+        // gets a reference to an AdmirerNFT in the collection
         // so that the caller can read its metadata and call its methods
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
@@ -301,11 +305,9 @@ pub contract Crediflow {
             let nft <- create CreatorNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalCreatorNFTSupply = self.totalCreatorNFTSupply + 1
-            let token <- nft as! @NonFungibleToken.NFT
-            recipient.deposit(token: <- token)
-
+            recipient.deposit(token: <- nft)
             return id
         }
 
@@ -323,11 +325,9 @@ pub contract Crediflow {
             let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalAdmirerNFTSupply = self.totalAdmirerNFTSupply + 1
-            let mintedNft <- nft as! @NonFungibleToken.NFT
-            recipient.deposit(token: <- mintedNft)
-
+            recipient.deposit(token: <- nft)
             return id
         }
 

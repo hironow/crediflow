@@ -20,18 +20,28 @@ This contract does not define anything like royalties. This is because if this c
 ### Scripts
 
 ```txt
-getContent
-getCreatorMap
-getAdmirerMap
+get-content
+get-creatorMap
+get-admirerMap
 ```
 
 ### Transactions
 
 ```txt
-beCreator
-beAdmirer
+setup-account
+create-content
+be-creator
+be-admirer
 claim
 tip
+```
+
+### Scripts Shortcut
+
+```script
+> flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Test"
+
+> flow transactions send --signer emulator-hironow cadence/transactions/be-creator.cdc 87 0x0dbaa95c7691bc4f
 ```
 
 ---
