@@ -255,43 +255,53 @@ pub contract Crediflow {
         // The name of this Crediflow Content
         pub let contentName: String
 
-        access(account) var creatorValut: {Address: &FungibleToken.Vault}
+        // NFTs minted by this Crediflow Content
+        access(account) var creatorNFTMap: {Address: NFTIdentifier}
+        access(account) var admirerNFTMap: {Address: NFTIdentifier}
+        pub var totalCreatorNFTSupply: UInt64
+        pub var totalAdmirerNFTSupply: UInt64
 
-        access(account) var creatorMap: {Address: NFTIdentifier}
-        access(account) var admirerMap: {Address: NFTIdentifier}
-        pub var totalCreatorSupply: UInt64
-        pub var totalAdmirerSupply: UInt64
-
+        // Vault of the token that can be claimed
+        access(account) var creatorFTValut: @FungibleToken.Vault
         access(account) var claimed: {Address: ValutProcesser}
         access(account) var tipped: {Address: ValutProcesser}
         pub var totalClaim: UInt64
         pub var totalTip: UInt64
 
         pub fun requestClaim(): @FungibleToken.Vault {
-            // impl
+            pre {
+                self.isClaimable(): "Cannot claim this CrediflowContent"
+            }
+
             // Poolからtokenを引き出す
+            let receiveFT <- self.creatorFTValut.withdraw(amount: 1.0)
             self.totalClaim = self.totalClaim + 1
+            return <- receiveFT
         }
 
-        pub fun requestTip(token: @FungibleToken.Vault) {
-            // impl
+        pub fun requestTip(tokenTipped: @FungibleToken.Vault) {
+            pre {
+                self.isTipable(): "Cannot tip this CrediflowContent"
+            }
+
             // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
+            self.creatorFTValut.deposit(from: <-tokenTipped)
             self.totalTip = self.totalTip + 1
         }
 
         pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64 {
             pre {
-                self.creatorMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent CreatorNFT"
+                self.creatorNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent CreatorNFT"
             }
             let recipentAddr: Address = recipient.owner!.address
-            let serial = self.totalCreatorSupply
+            let serial = self.totalCreatorNFTSupply
 
             // TODO: 許可されたらnft作成
             let nft <- create CreatorNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.creatorMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
-            self.totalCreatorSupply = self.totalCreatorSupply + 1
+            self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.totalCreatorNFTSupply = self.totalCreatorNFTSupply + 1
             let token <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- token)
 
@@ -300,10 +310,10 @@ pub contract Crediflow {
 
         pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, token: @FungibleToken.Vault): UInt64 {
             pre {
-                self.admirerMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent AdmirerNFT"
+                self.admirerNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent AdmirerNFT"
             }
             let recipentAddr: Address = recipient.owner!.address
-            let serial = self.totalAdmirerSupply
+            let serial = self.totalAdmirerNFTSupply
 
             // deposit token to Content
 
@@ -311,32 +321,37 @@ pub contract Crediflow {
             let nft <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId)
             let id = nft.id
 
-            self.admirerMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
-            self.totalAdmirerSupply = self.totalAdmirerSupply + 1
+            self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: 0)
+            self.totalAdmirerNFTSupply = self.totalAdmirerNFTSupply + 1
             let mintedNft <- nft as! @NonFungibleToken.NFT
             recipient.deposit(token: <- mintedNft)
 
             return id
         }
 
-        // pub fun isClaimable(): Bool {
-        //     // 時限性を実装するならここで
-        // }
+        pub fun isClaimable(): Bool {
+            // 時限性を実装するならここで
+            return true
+        }
 
-        // pub fun isTipable(): Bool {
-        //     // 時限性を実装するならここで
-        //     return true
-        // }
+        pub fun isTipable(): Bool {
+            // 時限性を実装するならここで
+            return true
+        }
 
         init(_name: String, _host: Address) {
             self.contentId = self.uuid
             self.contentHost = _host
             self.contentName = _name
-            self.totalCreatorSupply = 0
-            self.totalAdmirerSupply = 0
-            self.creatorValut = {} // TODO: 0のValutをつくるべき
-            self.creatorMap = {}
-            self.admirerMap = {}
+
+            // NFTs
+            self.totalCreatorNFTSupply = 0
+            self.totalAdmirerNFTSupply = 0
+            self.creatorNFTMap = {}
+            self.admirerNFTMap = {}
+
+            // Valuts
+            self.creatorFTValut <- FungibleToken.createEmptyVault()
             self.claimed = {}
             self.tipped = {}
             self.totalClaim = 0

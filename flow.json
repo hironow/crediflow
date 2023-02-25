@@ -1,6 +1,7 @@
 {
 	"contracts": {
 		"Crediflow": "cadence/contracts/Crediflow.cdc",
+		"FlowToken": "cadence/contracts/core/FlowToken.cdc",
 		"FungibleToken": "cadence/contracts/core/FungibleToken.cdc",
 		"MetadataViews": "cadence/contracts/core/MetadataViews.cdc",
 		"NonFungibleToken": "cadence/contracts/core/NonFungibleToken.cdc"
@@ -13,20 +14,28 @@
 	"accounts": {
 		"core": {
 			"address": "fd43f9148d4b725d",
-			"key": "81e65c3ea6a99deb82117a33c7d66b7d1a86b2f49d66b2a069c13c988b52e2a5"
+			"key": "398829b398c49eeaa5398be5186341d99e829d233906d4a6e982554ba10fd0d2"
 		},
 		"default": {
 			"address": "f669cb8d41ce0c74",
-			"key": "988bc6538c2242c06e351ba730c750bf58742d8b80368889c1253b660932bcc7"
+			"key": "f1bf44889f3454e2abf6738a3e0fcb971baabe9fce0de20761f370db75ce5981"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		},
+		"hironow": {
+			"address": "497866d0e68bf2cf",
+			"key": {
+				"type": "file",
+				"location": "/private/hironow.pkey"
+			}
 		}
 	},
 	"deployments": {
 		"emulator": {
 			"core": [
+				"FlowToken",
 				"FungibleToken",
 				"MetadataViews",
 				"NonFungibleToken"
