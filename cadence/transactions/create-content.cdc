@@ -1,5 +1,5 @@
 import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./core/NonFungibleToken.cdc"
-import Crediflow from 0xe03daebed8ca0615 // "../contracts/Crediflow.cdc"
+import Crediflow from 0x192440c99cb17282 // "../contracts/Crediflow.cdc"
 
 transaction(
     name: String,

@@ -1,5 +1,5 @@
 import FlowToken from 0x0ae53cb6e3f42a79
-import ExampleCrediflow from "../contracts/ExampleCrediflow.cdc"
+import Crediflow from 0x192440c99cb17282 // "../contracts/Crediflow.cdc"
 
 transaction() {
 
