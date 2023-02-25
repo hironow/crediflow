@@ -17,13 +17,14 @@ pub contract Crediflow {
 
     // EVENTS
     pub event ContractInitialized()
-    pub event CreateContent()
-    pub event CreatorDeposit()
-    pub event CreatorWithdraw()
-    pub event AdmirerDeposit()
-    pub event AdmirerWithdraw()
-    pub event CreatorClaimed()
-    pub event AdmirerTipped()
+    pub event CreateContent(contentId: UInt64, contentHost: Address)
+    pub event CreatorClaimed(id: UInt64, contentHost: Address, contentId: UInt64, recipient: Address, serial: UInt64, amount: UInt64)
+    pub event AdmirerTipped(id: UInt64, contentHost: Address, contentId: UInt64, recipient: Address, serial: UInt64, amount: UInt64)
+
+    pub event CreatorDeposit(id: UInt64, from: Address?)
+    pub event CreatorWithdraw(id: UInt64, to: Address?)
+    pub event AdmirerDeposit(id: UInt64, from: Address?)
+    pub event AdmirerWithdraw(id: UInt64, to: Address?)
 
     // STATE
     pub var totalCreatorSupply: UInt64
@@ -168,7 +169,7 @@ pub contract Crediflow {
         pub fun deposit(token: @NonFungibleToken.NFT) {
             let nft <- token as! @Crediflow.CreatorNFT
             let id: UInt64 = nft.id
-            let contentId = nft.contentId
+            let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Creator
             self.ownedNFTs[id] <-! nft
@@ -222,8 +223,8 @@ pub contract Crediflow {
         // and adds the ID to the id array
         pub fun deposit(token: @NonFungibleToken.NFT) {
             let nft <- token as! @Crediflow.AdmirerNFT
-            let id = nft.id
-            let contentId = nft.contentId
+            let id: UInt64 = nft.id
+            let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Admirer
             self.ownedNFTs[id] <-! nft

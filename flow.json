@@ -14,24 +14,20 @@
 	},
 	"accounts": {
 		"core": {
-			"address": "eb179c27144f783c",
-			"key": "b48fcf1723228f4af388b6e1f7de3ccf5a36108696da55e043dfbd92a03c9262"
-		},
-		"crediflow": {
-			"address": "e03daebed8ca0615",
-			"key": "9184c9f8e51108426a386dfd231a0f268210b9f7fefd09aa60317ff801ae3975"
+			"address": "fd43f9148d4b725d",
+			"key": "a7ca50e3ce85a625e8cd2d9164be77b556c6bbe853b92529a92f75069ae875ca"
 		},
 		"default": {
 			"address": "192440c99cb17282",
-			"key": "935f3e441315f97586409543cd7f03d108de0d4bc9b0705efd54f22994ca19c8"
+			"key": "95a844179a1b1c71119c9dd42dfd7fc2c502fcc7b1493f421c82e2f5be216f46"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
 		},
 		"emulator-hironow": {
-			"address": "0f7025fa05b578e3",
-			"key": "70d0bf7b98559829975ec377f3fcf46d6e67b9b051cb4b7ac5507266ae84124e"
+			"address": "eb179c27144f783c",
+			"key": "54d893f7426daa539c1a0206d8f84f028fd5d9be6c37bb6b21d653ab0acbe7af"
 		},
 		"hironow": {
 			"address": "497866d0e68bf2cf",
