@@ -1,7 +1,7 @@
 import FlowToken from 0x0ae53cb6e3f42a79 // "./contracts/core/FlowToken.cdc"
 import FungibleToken from 0xee82856bf20e2aa6 // "./contracts/core/FungibleToken.cdc"
 import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./contracts/core/NonFungibleToken.cdc"
-import Crediflow from 0x1beecc6fef95b62e // "../contracts/Crediflow.cdc"
+import Crediflow from 0xe03daebed8ca0615 // "../contracts/Crediflow.cdc"
 
 transaction(contentId: UInt64, host: Address) {
     // REFS
