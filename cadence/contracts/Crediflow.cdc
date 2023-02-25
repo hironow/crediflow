@@ -73,8 +73,7 @@ pub contract Crediflow {
     }
 
     // A Creator as an NFT
-    // Represents a NFT has a claimable Crediflow.
-    // TODO: MetadataViews.Resolver
+    // Represents a NFT has a claimable. TODO: MetadataViews.Resolver
     pub resource CreatorNFT: NonFungibleToken.INFT, Claimer {
         // The `uuid` of this resource
         pub let id: UInt64
@@ -113,8 +112,7 @@ pub contract Crediflow {
     }
 
     // An Admirer as an NFT
-    // Represents a NFT has a tipable Crediflow.
-    // TODO: MetadataViews.Resolver
+    // Represents a NFT has a tipable. TODO: MetadataViews.Resolver
     pub resource AdmirerNFT: NonFungibleToken.INFT, Tipper {
         // The `uuid` of this resource
         pub let id: UInt64
@@ -158,7 +156,7 @@ pub contract Crediflow {
     }
 
     // A Collection of Creator NFTs owned by an account. TODO: MetadataViews.ResolverCollection
-    pub resource CreatorCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource CreatorCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, CreatorCollectionPublic {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` as uuid field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
@@ -172,7 +170,7 @@ pub contract Crediflow {
             let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Creator
-            self.ownedNFTs[id] <-! nft
+            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
         // withdraw
@@ -232,7 +230,7 @@ pub contract Crediflow {
             let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
             // emit EVENT via Admirer
-            self.ownedNFTs[id] <-! nft
+            self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
         // withdraw
@@ -273,8 +271,8 @@ pub contract Crediflow {
     pub resource interface CrediflowContentPublic {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(_ tokenTipped: @FungibleToken.Vault)
-        pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64
+        pub fun mintCreator(recipient: &CreatorCollection): UInt64
+        pub fun mintAdmirer(recipient: &AdmirerCollection, tokenTipped: @FungibleToken.Vault): UInt64
 
         // pub fun closePool()
     }
@@ -324,7 +322,7 @@ pub contract Crediflow {
             self.totalTip = self.totalTip + 1
         }
 
-        pub fun mintCreator(recipient: &CreatorCollection{NonFungibleToken.CollectionPublic}): UInt64 {
+        pub fun mintCreator(recipient: &CreatorCollection): UInt64 {
             pre {
                 self.creatorNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent CreatorNFT"
             }
@@ -337,11 +335,12 @@ pub contract Crediflow {
 
             self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalCreatorNFTSupply = self.totalCreatorNFTSupply + 1
-            recipient.deposit(token: <- nft)
+            let token <- nft as! @NonFungibleToken.NFT
+            recipient.deposit(token: <- token)
             return id
         }
 
-        pub fun mintAdmirer(recipient: &AdmirerCollection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64 {
+        pub fun mintAdmirer(recipient: &AdmirerCollection, tokenTipped: @FungibleToken.Vault): UInt64 {
             pre {
                 self.admirerNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent AdmirerNFT"
             }
@@ -357,7 +356,8 @@ pub contract Crediflow {
 
             self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
             self.totalAdmirerNFTSupply = self.totalAdmirerNFTSupply + 1
-            recipient.deposit(token: <- nft)
+            let token <- nft as! @NonFungibleToken.NFT
+            recipient.deposit(token: <- token)
             return id
         }
 
