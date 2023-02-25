@@ -360,7 +360,7 @@ pub contract Crediflow {
                 self.isClaimable(): "Cannot claim this CrediflowContent"
             }
 
-            // Poolからtokenを引き出す
+            // TODO: Poolからtokenを引き出す
             let receiveFT <- self.creatorFTValut.withdraw(amount: 0.001)
             self.totalClaim = self.totalClaim + 1
             return <- receiveFT
@@ -371,7 +371,7 @@ pub contract Crediflow {
                 self.isTipable(): "Cannot tip this CrediflowContent"
             }
 
-            // tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
+            // TODO: tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
             self.creatorFTValut.deposit(from: <-tokenTipped)
             self.totalTip = self.totalTip + 1
         }
@@ -402,6 +402,7 @@ pub contract Crediflow {
             let serial = self.totalAdmirerNFTSupply
 
             // deposit token to Content
+            // TODO: creatorごとにtipを割当する
             self.creatorFTValut.deposit(from: <-tokenTipped)
 
             let token <- create AdmirerNFT(_contentHost: self.contentHost, _contentId: self.contentId, _serial: serial)
@@ -441,6 +442,8 @@ pub contract Crediflow {
             self.tipped = {}
             self.totalClaim = 0
             self.totalTip = 0
+
+            emit CreateContent(contentId: self.contentId, contentHost: self.contentHost)
         }
 
         destroy () {
