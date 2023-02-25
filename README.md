@@ -20,9 +20,10 @@ This contract does not define anything like royalties. This is because if this c
 ### Scripts
 
 ```txt
+get-all-content
 get-content
-get-creatorMap
-get-admirerMap
+get-creator-map
+get-admirer-map
 ```
 
 ### Transactions
@@ -32,8 +33,8 @@ setup-account
 create-content
 be-creator
 be-admirer
-claim
-tip
+process-tip
+process-claim
 ```
 
 ### Shortcut
@@ -53,22 +54,22 @@ flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMI
 ```shell
 flow scripts execute cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
 
+# create content
 flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
-
 export CREDIFLOW_CONTENT_ID=<id>
 
+# mint nft
 flow transactions send --signer emulator-creator cadence/transactions/be-creator.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-
 flow transactions send --signer emulator-admirer cadence/transactions/be-admirer.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-
 export CREDIFLOW_ADMIRER_NFT_ID=<id>
-
-flow transactions send --signer emulator-admirer cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
-
 export CREDIFLOW_CREATOR_NFT_ID=<id>
 
+# tip by nft
+flow transactions send --signer emulator-admirer cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
+# claim by nft
 flow transactions send --signer emulator-creator cadence/transactions/process-claim.cdc $CREDIFLOW_CREATOR_NFT_ID
 
+# failed check
 flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
 ```
 
@@ -149,3 +150,4 @@ import "Foo"
 * Cadence Language Reference <https://developers.flow.com/cadence/language>
 * Flow Smart Contract Project Development Standards <https://developers.flow.com/cadence/style-guide/project-development-tips>
 * Cadence anti-patterns <https://developers.flow.com/cadence/anti-patterns>
+ 
