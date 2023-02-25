@@ -5,5 +5,6 @@ config({
 	'app.detail.icon': 'https://unavatar.io/twitter/hironow', // shows image to the user to display your dapp brand
 	'accessNode.api': import.meta.env.VITE_ACCESS_NODE_API,
 	'discovery.wallet': import.meta.env.VITE_DISCOVERY_WALLET,
-	'0xProfile': import.meta.env.VITE_PROFILE_ADDRESS
+	'0xProfile': import.meta.env.VITE_PROFILE_ADDRESS,
+	'0xCrediflow': import.meta.env.VITE_CREDIFLOW_ADDRESS
 });

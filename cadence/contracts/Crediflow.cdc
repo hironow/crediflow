@@ -250,6 +250,11 @@ pub contract Crediflow: NonFungibleToken {
 
     // INTERFACE, not Collection
     pub resource interface CrediflowContentPublic {
+        pub let dateCreated: UFix64
+        pub let contentId: UInt64
+        pub let contentHost: Address
+        pub let contentName: String
+
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(_ tokenTipped: @FungibleToken.Vault)
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
@@ -450,6 +455,8 @@ pub contract Crediflow: NonFungibleToken {
     // PUBLIC COLLECTION INTERFACE
     pub resource interface CrediflowContainerPublic {
         pub fun borrowPublicContentRef(contentId: UInt64): &CrediflowContent{CrediflowContentPublic}?
+        pub fun getIDs(): [UInt64]
+        pub fun getAllContents(): {UInt64: String}
     }
 
     // A "Collection" of CrediflowContent
@@ -490,6 +497,16 @@ pub contract Crediflow: NonFungibleToken {
         // returns an array of the IDs that are in the collection
         pub fun getIDs(): [UInt64] {
             return self.contentMap.keys
+        }
+
+        // Maps the contentId to the name of that content. Just a kind helper.
+        pub fun getAllContents(): {UInt64: String} {
+            let answer: {UInt64: String} = {}
+            for id in self.contentMap.keys {
+                let ref = (&self.contentMap[id] as &CrediflowContent?)!
+                answer[id] = ref.contentName
+            }
+            return answer
         }
 
         init() {
