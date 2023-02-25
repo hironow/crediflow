@@ -34,18 +34,21 @@ pub contract Crediflow: NonFungibleToken {
     pub var totalSupply: UInt64
     pub var totalCreatorSupply: UInt64
     pub var totalAdmirerSupply: UInt64
-    pub var totalCrediflowContainer: UInt64
+    pub var totalCrediflowContent: UInt64
 
     pub enum NFTType: UInt8 {
-        pub case creator
-        pub case admirer
+        pub case Creator
+        pub case Admirer
     }
 
     // STRUCT
     pub struct RoleIdentifier { // immutable
-        pub let address: Address // creators' address
-        pub let role: String // creators' role
-        pub let metadata: {String: AnyStruct} // creators' metadata
+        // creator address
+        pub let address: Address
+        // creator role
+        pub let role: String
+        // creator metadata
+        pub let metadata: {String: AnyStruct}
 
         init(_address: Address, _role: String, _metadata: {String: AnyStruct}) {
             self.address = _address
@@ -56,8 +59,10 @@ pub contract Crediflow: NonFungibleToken {
 
     pub struct NFTIdentifier { // immutable
         pub let id: UInt64
-        pub let address: Address // creators' or admirers' address
-        pub let serial: UInt64 // creators' or admirers' serial
+        // creator or admirer address
+        pub let address: Address
+        // creator or admirer serial
+        pub let serial: UInt64
 
         init(_id: UInt64, _address: Address, _serial: UInt64) {
             self.id = _id
@@ -66,36 +71,38 @@ pub contract Crediflow: NonFungibleToken {
         }
     }
 
-    pub struct ValutProcesser { // not immutable
-        pub let address: Address // creators' address
-        pub let balance: UInt64 // creators' claimable balance
+    pub struct ValutProcesser { // immutable, but can be updated
+        // creator address
+        pub let address: Address
+        // creator claimable balance
+        pub let balance: UFix64
 
-        init(_address: Address, _balance: UInt64) {
+        init(_address: Address, _balance: UFix64) {
             self.address = _address
             self.balance = _balance
         }
     }
 
     // INTERFACE
-    // pub resource interface Claimer {
-    //     pub fun claim(): @FungibleToken.Vault {
-    //         post {
-    //             result.balance > 0.0: "Claim amount must be greater than 0.0"
-    //         }
-    //     }
-    // }
+    pub resource interface Claimer {
+        pub fun claim(): @FungibleToken.Vault {
+            post {
+                result.balance > 0.0: "Claim amount must be greater than 0.0"
+            }
+        }
+    }
 
-    // pub resource interface Tipper {
-    //     pub fun tip(token: @FungibleToken.Vault) {
-    //         pre {
-    //             token.balance > 0.0: "Tip amount must be greater than 0.0"
-    //         }
-    //     }
-    // }
+    pub resource interface Tipper {
+        pub fun tip(token: @FungibleToken.Vault) {
+            pre {
+                token.balance > 0.0: "Tip amount must be greater than 0.0"
+            }
+        }
+    }
 
     // A Creator as an NFT
     // Represents a NFT has a claimable.
-    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver, Claimer, Tipper {
         // The `uuid` of this resource
         pub let id: UInt64
 
@@ -108,26 +115,26 @@ pub contract Crediflow: NonFungibleToken {
         pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
 
         // claim from the content
-        // pub fun claim(): @FungibleToken.Vault {
-        //     let container = self.containerCap.borrow()
-        //         ?? panic("Could not borrow a reference to the CrediflowContainer")
+        pub fun claim(): @FungibleToken.Vault {
+            let container = self.containerCap.borrow()
+                ?? panic("Could not borrow a reference to the CrediflowContainer")
 
-        //     let content = container.borrowPublicContentRef(contentId: self.contentId)
-        //         ?? panic("Could not borrow a reference to the Content")
+            let content = container.borrowPublicContentRef(contentId: self.contentId)
+                ?? panic("Could not borrow a reference to the Content")
 
-        //     return <- content.requestClaim()
-        // }
+            return <- content.requestClaim()
+        }
 
         // tip to the content
-        // pub fun tip(token: @FungibleToken.Vault) {
-        //     let container = self.containerCap.borrow()
-        //         ?? panic("Could not borrow a reference to the CrediflowContainer")
+        pub fun tip(token: @FungibleToken.Vault) {
+            let container = self.containerCap.borrow()
+                ?? panic("Could not borrow a reference to the CrediflowContainer")
 
-        //     let content = container.borrowPublicContentRef(contentId: self.contentId)
-        //         ?? panic("Could not borrow a reference to the Content")
+            let content = container.borrowPublicContentRef(contentId: self.contentId)
+                ?? panic("Could not borrow a reference to the Content")
 
-        //     content.requestTip(<- token)
-        // }
+            content.requestTip(<- token)
+        }
 
         pub fun getViews(): [Type] {
             let supportedViews: [Type] = [
@@ -160,6 +167,7 @@ pub contract Crediflow: NonFungibleToken {
             Crediflow.totalSupply = Crediflow.totalSupply + 1
             // TODO: 分岐
             Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
+            Crediflow.totalAdmirerSupply = Crediflow.totalAdmirerSupply + 1
         }
 
         destroy () {}
@@ -246,7 +254,7 @@ pub contract Crediflow: NonFungibleToken {
         pub fun requestClaim(): @FungibleToken.Vault
         pub fun requestTip(_ tokenTipped: @FungibleToken.Vault)
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
-        pub fun mintAdmirer(recipient: &Collection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64
+        pub fun mintAdmirer(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
 
         // pub fun closePool()
     }
@@ -262,14 +270,19 @@ pub contract Crediflow: NonFungibleToken {
         // The name of this Crediflow Content
         pub let contentName: String
 
+        pub let dateCreated: UFix64
+
         // NFTs minted by this Crediflow Content
-        access(account) var creatorMap: {Address: NFTIdentifier}
-        access(account) var admirerMap: {Address: NFTIdentifier}
-        pub var totalCreatorNFTSupply: UInt64
-        pub var totalAdmirerNFTSupply: UInt64
+        access(account) var creatorNFTMap: {Address: NFTIdentifier}
+        access(account) var admirerNFTMap: {Address: NFTIdentifier}
+        pub var contentCreatorNFTSupply: UInt64
+        pub var contentAdmirerNFTSupply: UInt64
 
         // Vault of the token that can be claimed
         pub var creatorFTValut: @FlowToken.Vault
+        access(account) var creatorValutMap: {Address: ValutProcesser}
+        access(account) var creatorMap: {Address: RoleIdentifier}
+
         access(account) var claimed: {Address: ValutProcesser}
         access(account) var tipped: {Address: ValutProcesser}
         pub var totalClaim: UInt64
@@ -278,10 +291,25 @@ pub contract Crediflow: NonFungibleToken {
         pub fun requestClaim(): @FungibleToken.Vault {
             pre {
                 self.isClaimable(): "Cannot claim this CrediflowContent"
+                self.creatorMap[self.owner!.address] == nil: "You are not allowed to claim this CrediflowContent"
+                self.creatorValutMap[self.owner!.address] == nil: "You are not allowed to claim this CrediflowContent"
+                self.creatorNFTMap[self.owner!.address] == nil: "You are not allowed to claim this CrediflowContent"
+            }
+            post {
+                self.creatorValutMap[self.owner!.address]?.balance == 0.0: "Should be claimed all balance"
+                self.claimed[self.owner!.address]?.balance == 0.0: "Should be claimed any balance"
             }
 
-            // TODO: Poolからtokenを引き出す
-            let receiveFT <- self.creatorFTValut.withdraw(amount: 0.001)
+            // claim by own claimable max amount
+            let claimAmount = self.creatorValutMap[self.owner!.address]?.balance ?? panic("Should not happen")
+            if claimAmount == 0.0 {
+                return <- FlowToken.createEmptyVault()
+            }
+
+            self.claimed[self.owner!.address] = ValutProcesser(
+                _address: self.owner!.address,
+                _balance: self.claimed[self.owner!.address]?.balance ?? 0.0 + claimAmount)
+            let receiveFT <- self.creatorFTValut.withdraw(amount: claimAmount)
             self.totalClaim = self.totalClaim + 1
             return <- receiveFT
         }
@@ -289,47 +317,68 @@ pub contract Crediflow: NonFungibleToken {
         pub fun requestTip(_ tokenTipped: @FungibleToken.Vault) {
             pre {
                 self.isTipable(): "Cannot tip this CrediflowContent"
+                self.admirerNFTMap[self.owner!.address] == nil: "You are not allowed to tip this CrediflowContent"
+            }
+            post {
+                self.tipped[self.owner!.address]?.balance == 0.0: "Should be tipped any balance"
             }
 
-            // TODO: tokenをCrediflowContainerのaccountからも引き出せない状態で保管したい(できればburnもできないようにしたい)
-            self.creatorFTValut.deposit(from: <-tokenTipped)
+            // split token to each creator
+            let splitTipAmount = tokenTipped.balance / UFix64(self.creatorValutMap.length)
+            for creatorValutKey in self.creatorValutMap.keys {
+                let creatorValue = self.creatorValutMap[creatorValutKey] ?? panic("Should not happen")
+                // update creator's tip amount
+                self.creatorValutMap[creatorValutKey] = ValutProcesser(
+                    _address: creatorValue.address,
+                    _balance: creatorValue.balance + splitTipAmount)
+            }
+
+            self.tipped[self.owner!.address] = ValutProcesser(
+                _address: self.owner!.address,
+                _balance: self.tipped[self.owner!.address]?.balance ?? 0.0 + tokenTipped.balance)
+            self.creatorFTValut.deposit(from: <- tokenTipped)
             self.totalTip = self.totalTip + 1
         }
 
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64 {
             pre {
-                self.creatorMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent Creator NFT"
+                self.creatorNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent Creator NFT"
+                self.creatorMap[self.owner!.address] == nil: "You are not allowed to mint this CrediflowContent Creator NFT"
+                self.creatorValutMap[self.owner!.address] == nil: "You are not allowed to mint this CrediflowContent Creator NFT"
             }
-            let recipentAddr: Address = recipient.owner!.address
-            let serial: UInt64 = self.totalCreatorNFTSupply
+            post {
+                self.creatorNFTMap[recipient.owner!.address] != nil: "Should be minted Creator NFT"
+            }
 
-            // TODO: 許可されたらnft作成
-            let token <- create NFT(_type: NFTType.creator, _contentHost: self.contentHost, _contentId: self.contentId, _serial: serial)
+            let recipentAddr: Address = recipient.owner!.address
+            let serial: UInt64 = self.contentCreatorNFTSupply
+
+            let token <- create NFT(_type: NFTType.Creator, _contentHost: self.contentHost, _contentId: self.contentId, _serial: serial)
             let id: UInt64 = token.id
 
-            self.creatorMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
-            self.totalCreatorNFTSupply = self.totalCreatorNFTSupply + 1
+            self.creatorNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
+            self.contentCreatorNFTSupply = self.contentCreatorNFTSupply + 1
 
             recipient.deposit(token: <- token)
             return id
         }
 
-        pub fun mintAdmirer(recipient: &Collection{NonFungibleToken.CollectionPublic}, tokenTipped: @FungibleToken.Vault): UInt64 {
+        pub fun mintAdmirer(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64 {
             pre {
-                self.admirerMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent Admirer NFT"
+                self.admirerNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent Admirer NFT"
             }
+            post {
+                self.admirerNFTMap[recipient.owner!.address] != nil: "Should be minted Admirer NFT"
+            }
+
             let recipentAddr: Address = recipient.owner!.address
-            let serial = self.totalAdmirerNFTSupply
+            let serial = self.contentAdmirerNFTSupply
 
-            // deposit token to Content
-            // TODO: creatorごとにtipを割当する
-            self.creatorFTValut.deposit(from: <-tokenTipped)
-
-            let token <- create NFT(_type: NFTType.admirer, _contentHost: self.contentHost, _contentId: self.contentId, _serial: serial)
+            let token <- create NFT(_type: NFTType.Admirer, _contentHost: self.contentHost, _contentId: self.contentId, _serial: serial)
             let id: UInt64 = token.id
 
-            self.admirerMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
-            self.totalAdmirerNFTSupply = self.totalAdmirerNFTSupply + 1
+            self.admirerNFTMap[recipentAddr] = NFTIdentifier(_id: id, _address: recipentAddr, _serial: serial)
+            self.contentAdmirerNFTSupply = self.contentAdmirerNFTSupply + 1
 
             recipient.deposit(token: <- token)
             return id
@@ -345,24 +394,37 @@ pub contract Crediflow: NonFungibleToken {
             return true
         }
 
-        init(_name: String, _host: Address) {
+        init(_name: String, _host: Address, _creatorMap: {Address: RoleIdentifier}) {
             self.contentId = self.uuid
             self.contentHost = _host
             self.contentName = _name
 
+            self.dateCreated = getCurrentBlock().timestamp
+            self.creatorMap = _creatorMap // immutable
+
             // NFTs
-            self.totalCreatorNFTSupply = 0
-            self.totalAdmirerNFTSupply = 0
-            self.creatorMap = {}
-            self.admirerMap = {}
+            self.contentCreatorNFTSupply = 0
+            self.contentAdmirerNFTSupply = 0
+            self.creatorNFTMap = {} // this mean no minted NFT as a creator
+            self.admirerNFTMap = {} // this mean no minted NFT as an admirer
 
             // Valuts
             self.creatorFTValut <- FlowToken.createEmptyVault() as! @FlowToken.Vault
+
+            // Processer
+            // create empty creators' valut
+            let creatorValueMap: {Address: ValutProcesser} = {}
+            for creatorAddress in _creatorMap.keys {
+                creatorValueMap[creatorAddress] = ValutProcesser(_address: creatorAddress, _balance: 0.0)
+            }
+            self.creatorValutMap = creatorValueMap
+
             self.claimed = {}
             self.tipped = {}
             self.totalClaim = 0
             self.totalTip = 0
 
+            Crediflow.totalCrediflowContent = Crediflow.totalCrediflowContent + 1
             emit CreateContent(contentId: self.contentId, contentHost: self.contentHost)
         }
 
@@ -383,10 +445,12 @@ pub contract Crediflow: NonFungibleToken {
         // Creates a new Crediflow Content
         pub fun createContent(
             name: String,
+            creatorMap: {Address: RoleIdentifier}
         ): UInt64 {
             let crediflowContent <- create CrediflowContent(
                 _name: name,
                 _host: self.owner!.address,
+                _creatorMap: creatorMap
             )
             let contentId = crediflowContent.contentId
             self.contentMap[contentId] <-! crediflowContent
@@ -449,7 +513,7 @@ pub contract Crediflow: NonFungibleToken {
         self.totalSupply = 0
         self.totalCreatorSupply = 0
         self.totalAdmirerSupply = 0
-        self.totalCrediflowContainer = 0
+        self.totalCrediflowContent = 0
         emit ContractInitialized()
 
         self.CrediflowCollectionStoragePath = /storage/crediflowCollectionStoragePath
