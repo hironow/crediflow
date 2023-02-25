@@ -364,8 +364,8 @@ pub contract Crediflow: NonFungibleToken {
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64 {
             pre {
                 self.creatorNFTMap[recipient.owner!.address] == nil: "Already minted their CrediflowContent Creator NFT"
-                self.creatorMap[recipient.owner!.address] == nil: "You are not allowed to mint this CrediflowContent Creator NFT"
-                self.creatorValutMap[recipient.owner!.address] == nil: "You are not allowed to mint this CrediflowContent Creator NFT"
+                self.creatorMap[recipient.owner!.address] != nil: "You are not allowed to mint this CrediflowContent Creator NFT"
+                self.creatorValutMap[recipient.owner!.address] != nil: "You are not allowed to mint this CrediflowContent Creator NFT"
             }
             post {
                 self.creatorNFTMap[recipient.owner!.address] != nil: "Should be minted Creator NFT"
