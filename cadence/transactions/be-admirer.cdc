@@ -1,9 +1,9 @@
 import FlowToken from 0x0ae53cb6e3f42a79
 import FungibleToken from 0xee82856bf20e2aa6
 import NonFungibleToken from 0xf8d6e0586b0a20c7
-import Crediflow from 0x0dbaa95c7691bc4f
+import Crediflow from 0xf1365e67d4ab9a42
 
-transaction(contentId: UInt64, host: Address, amount: UFix64) {
+transaction(contentId: UInt64, host: Address) {
     // REFS
     let Content: &Crediflow.CrediflowContent{Crediflow.CrediflowContentPublic}
     let AdmirerCollection: &Crediflow.Collection
@@ -30,12 +30,7 @@ transaction(contentId: UInt64, host: Address, amount: UFix64) {
     }
 
     execute {
-        let params: {String: AnyStruct} = {}
-
-        // tipしないとmintできないようにしたい
-        let payment <- self.FlowTokenVault.withdraw(amount: amount)
-
-        self.Content.mintAdmirer(recipient: self.AdmirerCollection, tokenTipped: <- payment)
+        self.Content.mintAdmirer(recipient: self.AdmirerCollection)
         log("Minted a new Crediflow Admirer NFT for the signer.")
     }
 }
