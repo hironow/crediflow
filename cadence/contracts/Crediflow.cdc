@@ -260,7 +260,7 @@ pub contract Crediflow: NonFungibleToken {
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
         pub fun mintAdmirer(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
 
-        // pub fun closePool()
+        access(account) fun closePool()
     }
 
     //
@@ -291,6 +291,9 @@ pub contract Crediflow: NonFungibleToken {
         access(account) var tipped: {Address: ValutProcesser}
         pub var totalClaim: UInt64
         pub var totalTip: UInt64
+
+        pub var claimable: Bool
+        pub var tipable: Bool
 
         pub fun requestClaim(): @FungibleToken.Vault {
             pre {
@@ -403,13 +406,30 @@ pub contract Crediflow: NonFungibleToken {
         }
 
         pub fun isClaimable(): Bool {
-            // 時限性を実装するならここで
-            return true
+            return self.claimable
         }
 
         pub fun isTipable(): Bool {
-            // 時限性を実装するならここで
-            return true
+            return self.tipable
+        }
+
+        access(account) fun closePool() {
+            post {
+                self.creatorFTPool.balance == 0.0: "Should be closed creatorFTPool"
+                self.claimable == false: "Should be closed claimable"
+                self.tipable == false: "Should be closed tipable"
+            }
+
+            for tippedAddress in self.tipped.keys {
+                let tippedAmount = self.tipped[tippedAddress]?.balance ?? panic("Should not happen")
+                // REFUND! deposit to tippedAddress
+                let ftRef = getAccount(tippedAddress).getCapability(/public/flowTokenReceiver)
+                    .borrow<&{FungibleToken.Receiver}>()
+                    ?? panic("Could not borrow receiver reference to the FlowToken contract")
+                ftRef.deposit(from: <- self.creatorFTPool.withdraw(amount: tippedAmount))
+            }
+            self.claimable = false
+            self.tipable = false
         }
 
         init(_name: String, _host: Address, _creatorMap: {Address: RoleIdentifier}) {
@@ -442,12 +462,15 @@ pub contract Crediflow: NonFungibleToken {
             self.totalClaim = 0
             self.totalTip = 0
 
+            self.claimable = true
+            self.tipable = true
+
             Crediflow.totalCrediflowContent = Crediflow.totalCrediflowContent + 1
             emit CreateContent(contentId: self.contentId, contentHost: self.contentHost)
         }
 
         destroy () {
-            // もしもすでにtip残高があれば失敗したい ※危険FTの burn に相当する
+            self.closePool() // MUST REFUND!
             destroy self.creatorFTPool
         }
     }
@@ -480,8 +503,8 @@ pub contract Crediflow: NonFungibleToken {
 
         // Deletes a content
         pub fun deleteContent(contentId: UInt64) {
-            // もしもすでにtip残高があれば失敗したい ※危険FTの burn に相当する
             let contentRef = self.borrowContentRef(contentId: contentId) ?? panic("missing CrediflowContent")
+            contentRef.closePool() // MUST REFUND!
             destroy self.contentMap.remove(key: contentId)
         }
 
@@ -493,8 +516,6 @@ pub contract Crediflow: NonFungibleToken {
             return &self.contentMap[contentId] as &CrediflowContent{CrediflowContentPublic}?
         }
 
-        // getIDs
-        // returns an array of the IDs that are in the collection
         pub fun getIDs(): [UInt64] {
             return self.contentMap.keys
         }
@@ -517,11 +538,10 @@ pub contract Crediflow: NonFungibleToken {
         /// This uses the closePool method, so it will panic if there are still tokens staked in any of the objects
         destroy() {
             let contentIDs = self.getIDs()
-
             for contentID in contentIDs {
-                // self.closePool(contentId: contentID)
+                let contentRef = self.borrowContentRef(contentId: contentID) ?? panic("missing CrediflowContent")
+                contentRef.closePool() // MUST REFUND!
             }
-
             destroy self.contentMap
         }
     }
