@@ -3,6 +3,10 @@ import FungibleToken from 0xee82856bf20e2aa6 // "./core/FungibleToken.cdc"
 import NonFungibleToken from 0xf8d6e0586b0a20c7 // "./core/NonFungibleToken.cdc"
 import MetadataViews from 0xf8d6e0586b0a20c7 // "./core/MetadataViews.cdc"
 
+//
+// Crediflow: credit + flow
+// contents' end `credit`s and `flow` blockchain
+//
 pub contract Crediflow {
     // PATHS
     pub let CrediflowCreatorCollectionStoragePath: StoragePath
@@ -123,7 +127,6 @@ pub contract Crediflow {
             self.containerCap = getAccount(_contentHost)
                 .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
 
-            // emit EVENT via Creator
             Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
         }
 
@@ -181,7 +184,6 @@ pub contract Crediflow {
             self.containerCap = getAccount(_contentHost)
                 .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
 
-            // emit EVENT via Admirer
             Crediflow.totalAdmirerSupply = Crediflow.totalAdmirerSupply + 1
         }
 
@@ -209,7 +211,7 @@ pub contract Crediflow {
             let id: UInt64 = nft.id
             let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
-            // emit EVENT via Creator
+            emit CreatorDeposit(id: id, from: self.owner!.address)
             self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
@@ -217,7 +219,7 @@ pub contract Crediflow {
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
             let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this CreatorNFT does not exist")
-            // emit EVENT via Creator
+            emit CreatorWithdraw(id: withdrawID, to: self.owner!.address)
             return <- token
         }
 
@@ -275,7 +277,7 @@ pub contract Crediflow {
             let id: UInt64 = nft.id
             let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
-            // emit EVENT via Admirer
+            emit AdmirerDeposit(id: id, from: self.owner!.address)
             self.ownedNFTs[id] <-! nft as! @NonFungibleToken.NFT
         }
 
@@ -283,7 +285,7 @@ pub contract Crediflow {
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
             let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this AdmirerNFT does not exist")
-            // emit EVENT via Admirer
+            emit AdmirerWithdraw(id: withdrawID, to: self.owner!.address)
             return <- token
         }
 
