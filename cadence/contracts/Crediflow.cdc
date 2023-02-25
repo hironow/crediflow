@@ -18,14 +18,10 @@ pub contract Crediflow: NonFungibleToken {
 
     // EVENTS
     pub event ContractInitialized()
-    pub event CreateContent(contentId: UInt64, contentHost: Address)
-    pub event CreatorClaimed(id: UInt64, contentHost: Address, contentId: UInt64, recipient: Address, serial: UInt64, amount: UInt64)
-    pub event AdmirerTipped(id: UInt64, contentHost: Address, contentId: UInt64, recipient: Address, serial: UInt64, amount: UInt64)
 
-    pub event CreatorDeposit(id: UInt64, from: Address?)
-    pub event CreatorWithdraw(id: UInt64, to: Address?)
-    pub event AdmirerDeposit(id: UInt64, from: Address?)
-    pub event AdmirerWithdraw(id: UInt64, to: Address?)
+    pub event CreateContent(contentId: UInt64, contentHost: Address)
+    pub event CreatorClaimed(contentId: UInt64, contentHost: Address, recipient: Address, amount: UFix64)
+    pub event AdmirerTipped(contentId: UInt64, contentHost: Address, recipient: Address, amount: UFix64)
 
     pub event Deposit(id: UInt64, to: Address?)
     pub event Withdraw(id: UInt64, from: Address?)
@@ -164,10 +160,13 @@ pub contract Crediflow: NonFungibleToken {
             self.containerCap = getAccount(_contentHost)
                 .getCapability<&CrediflowContainer{CrediflowContainerPublic}>(Crediflow.CrediflowContainerPublicPath)
 
+            switch self.nftType {
+                case NFTType.Creator:
+                    Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
+                case NFTType.Admirer:
+                    Crediflow.totalAdmirerSupply = Crediflow.totalAdmirerSupply + 1
+            }
             Crediflow.totalSupply = Crediflow.totalSupply + 1
-            // TODO: 分岐
-            Crediflow.totalCreatorSupply = Crediflow.totalCreatorSupply + 1
-            Crediflow.totalAdmirerSupply = Crediflow.totalAdmirerSupply + 1
         }
 
         destroy () {}
@@ -196,16 +195,16 @@ pub contract Crediflow: NonFungibleToken {
             let id: UInt64 = nft.id
             let contentId: UInt64 = nft.contentId
             // add the new token to the dictionary which removes the old one
-            emit CreatorDeposit(id: id, from: self.owner!.address)
+            emit Deposit(id: id, to: self.owner!.address)
             self.ownedNFTs[id] <-! nft
         }
 
         // withdraw
         // removes an NFT from the collection and moves it to the caller
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
-            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this CreatorNFT does not exist")
-            emit CreatorWithdraw(id: withdrawID, to: self.owner!.address)
-            return <- token
+            let nft <- self.ownedNFTs.remove(key: withdrawID) ?? panic("this CreatorNFT does not exist")
+            emit Withdraw(id: withdrawID, from: self.owner!.address)
+            return <- nft
         }
 
         // getIDs
@@ -279,7 +278,7 @@ pub contract Crediflow: NonFungibleToken {
         pub var contentAdmirerNFTSupply: UInt64
 
         // Vault of the token that can be claimed
-        pub var creatorFTValut: @FlowToken.Vault
+        pub var creatorFTPool: @FlowToken.Vault
         access(account) var creatorValutMap: {Address: ValutProcesser}
         access(account) var creatorMap: {Address: RoleIdentifier}
 
@@ -309,8 +308,15 @@ pub contract Crediflow: NonFungibleToken {
             self.claimed[self.owner!.address] = ValutProcesser(
                 _address: self.owner!.address,
                 _balance: self.claimed[self.owner!.address]?.balance ?? 0.0 + claimAmount)
-            let receiveFT <- self.creatorFTValut.withdraw(amount: claimAmount)
+
+            emit CreatorClaimed(
+                contentId: self.contentId,
+                contentHost: self.contentHost,
+                recipient: self.owner!.address,
+                amount: claimAmount,
+            )
             self.totalClaim = self.totalClaim + 1
+            let receiveFT <- self.creatorFTPool.withdraw(amount: claimAmount)
             return <- receiveFT
         }
 
@@ -336,8 +342,15 @@ pub contract Crediflow: NonFungibleToken {
             self.tipped[self.owner!.address] = ValutProcesser(
                 _address: self.owner!.address,
                 _balance: self.tipped[self.owner!.address]?.balance ?? 0.0 + tokenTipped.balance)
-            self.creatorFTValut.deposit(from: <- tokenTipped)
+
+            emit AdmirerTipped(
+                contentId: self.contentId,
+                contentHost: self.contentHost,
+                recipient: self.owner!.address,
+                amount: tokenTipped.balance,
+            )
             self.totalTip = self.totalTip + 1
+            self.creatorFTPool.deposit(from: <- tokenTipped)
         }
 
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64 {
@@ -409,7 +422,7 @@ pub contract Crediflow: NonFungibleToken {
             self.admirerNFTMap = {} // this mean no minted NFT as an admirer
 
             // Valuts
-            self.creatorFTValut <- FlowToken.createEmptyVault() as! @FlowToken.Vault
+            self.creatorFTPool <- FlowToken.createEmptyVault() as! @FlowToken.Vault
 
             // Processer
             // create empty creators' valut
@@ -429,7 +442,8 @@ pub contract Crediflow: NonFungibleToken {
         }
 
         destroy () {
-            destroy self.creatorFTValut
+            // もしもすでにtip残高があれば失敗したい ※危険FTの burn に相当する
+            destroy self.creatorFTPool
         }
     }
 
@@ -463,12 +477,6 @@ pub contract Crediflow: NonFungibleToken {
             let contentRef = self.borrowContentRef(contentId: contentId) ?? panic("missing CrediflowContent")
             destroy self.contentMap.remove(key: contentId)
         }
-
-        // access(account) fun borrowContainerRef(): &CrediflowContainer {
-        //     // 自身を渡す ※危険
-        //     // grantでverifyしないといけない
-        //     return &self as &CrediflowContainer
-        // }
 
         pub fun borrowContentRef(contentId: UInt64): &CrediflowContent? {
             return &self.contentMap[contentId] as &CrediflowContent?
