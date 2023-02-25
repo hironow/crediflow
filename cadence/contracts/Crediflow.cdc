@@ -142,6 +142,12 @@ pub contract Crediflow {
         }
     }
 
+    pub resource interface CreatorCollectionPublic {
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun deposit(token: @NonFungibleToken.NFT)
+        pub fun getIDs(): [UInt64]
+    }
+
     // A Collection of Creator NFTs owned by an account
     // TODO: MetadataViews.ResolverCollection
     pub resource CreatorCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
@@ -191,9 +197,15 @@ pub contract Crediflow {
         }
     }
 
+    pub resource interface AdmirerCollectionPublic {
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun deposit(token: @NonFungibleToken.NFT)
+        pub fun getIDs(): [UInt64]
+    }
+
     // A Collection that tips all of the Admirer Crediflow.
     // TODO: MetadataViews.ResolverCollection
-    pub resource AdmirerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource AdmirerCollection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, AdmirerCollectionPublic {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}

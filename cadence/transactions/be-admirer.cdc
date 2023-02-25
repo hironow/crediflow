@@ -21,7 +21,7 @@ transaction(amount: UFix64, contentId: UInt64, host: Address) {
         // SETUP Crediflow NFT Collection for Admirer
         if acct.borrow<&Crediflow.AdmirerCollection>(from: Crediflow.CrediflowAdmirerCollectionStoragePath) == nil {
             acct.save(<-Crediflow.createEmptyAdmirerCollection(), to: Crediflow.CrediflowAdmirerCollectionStoragePath)
-            acct.link<&Crediflow.AdmirerCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowAdmirerCollectionPublicPath, target: Crediflow.CrediflowAdmirerCollectionStoragePath)
+            acct.link<&Crediflow.AdmirerCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, Crediflow.AdmirerCollectionPublic}>(Crediflow.CrediflowAdmirerCollectionPublicPath, target: Crediflow.CrediflowAdmirerCollectionStoragePath)
         }
 
         let Container = getAccount(host).getCapability(Crediflow.CrediflowContainerPublicPath).borrow<&CrediflowContainer{Crediflow.CrediflowContainerPublic}>()

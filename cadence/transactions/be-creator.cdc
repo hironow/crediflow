@@ -15,7 +15,7 @@ transaction(contentId: UInt64, host: Address) {
         // SETUP Crediflow NFT Collection for Creator
         if acct.borrow<&Crediflow.CreatorCollection>(from: Crediflow.CrediflowCreatorCollectionStoragePath) == nil {
             acct.save(<-Crediflow.createEmptyCreatorCollection(), to: Crediflow.CrediflowCreatorCollectionStoragePath)
-            acct.link<&Crediflow.CreatorCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowCreatorCollectionPublicPath, target: Crediflow.CrediflowCreatorCollectionStoragePath)
+            acct.link<&Crediflow.CreatorCollection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, Crediflow.AdmirerCollectionPublic}>(Crediflow.CrediflowCreatorCollectionPublicPath, target: Crediflow.CrediflowCreatorCollectionStoragePath)
         }
 
         // Get Crediflow Content from the host
