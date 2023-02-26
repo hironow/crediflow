@@ -4,15 +4,14 @@
 
 	import UserAddress from './UserAddress.svelte';
 	import ContentList from './ContentList.svelte';
-	import Profile from './Profile.svelte';
 </script>
 
 <div class="grid">
 	<div class="mb-2">
-		{#if $user?.loggedIn && $profile}
-			<Profile />
+		{#if $user?.loggedIn }
+			<ContentList />
 		{:else}
-			<h1>Welcome to web3!</h1>
+			<h1>Welcome to Crediflow!</h1>
 			<p>
 				This is a starter app built on Flow. It demonstrates how to use the Flow Client Library
 				(FCL) with SvelteKit.
@@ -20,7 +19,7 @@
 			{#if !$user?.loggedIn}
 				<p>Login to get started.</p>
 			{:else}
-				<p>Create a profile and then click on Load Profile to see it here.</p>
+				<p>Create a Crediflow and then click on Load all Crediflow to see it here.</p>
 			{/if}
 		{/if}
 	</div>
