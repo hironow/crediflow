@@ -38,8 +38,8 @@ process-claim
 ### Shortcut
 
 ```shell
-export CREDIFLOW_HOST=0xf4a3472b32eac8d8
-export CREDIFLOW_CREATOR=0x10c4fef62310c807
+export CREDIFLOW_HOST=0x497866d0e68bf2cf
+export CREDIFLOW_CREATOR=0xa62b28e5da5d3609
 export CREDIFLOW_ADMIRER=0x06909bc5ba14c266
 
 printenv | grep CREDIFLOW

@@ -52,6 +52,20 @@
 				"type": "file",
 				"location": "./private/hironow-test.pkey"
 			}
+		},
+		"hironow-test-admirer": {
+			"address": "0ca537db2c2086af",
+			"key": {
+				"type": "file",
+				"location": "./private/hironow-test-admirer.pkey"
+			}
+		},
+		"hironow-test-creator": {
+			"address": "a62b28e5da5d3609",
+			"key": {
+				"type": "file",
+				"location": "./private/hironow-test-creator.pkey"
+			}
 		}
 	},
 	"deployments": {

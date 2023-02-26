@@ -1,6 +1,6 @@
 <script>
-	import { contents, user, input } from '../flow/stores';
-	import { sendQuery, unauthenticate, logIn, signUp, initAccount } from '../flow/actions';
+	import { contents, user } from '../flow/stores';
+	import { getAllContent, unauthenticate, logIn, signUp, initAccount } from '../flow/actions';
 
 	import UserAddress from './UserAddress.svelte';
 	import ContentList from './ContentList.svelte';
@@ -8,7 +8,7 @@
 
 <div class="grid">
 	<div class="mb-2">
-		{#if $user?.loggedIn}
+		{#if $user?.loggedIn && $contents.length > 0 }
 			<ContentList />
 		{:else}
 			<h1>Welcome to Crediflow!</h1>
@@ -35,9 +35,16 @@
 
 				<label for="host"
 					>Host
-					<input type="text" id="host" name="host" placeholder="Host" bind:value={$input.host} />
+					<input
+						type="text"
+						id="host"
+						name="host"
+						placeholder="Host"
+						value={'0x497866d0e68bf2cf'}
+						disabled
+					/>
 				</label>
-				<button on:click={() => sendQuery($input.host)}>Load All Crediflow</button>
+				<button on:click={() => getAllContent('0x497866d0e68bf2cf')}>Load All Crediflow</button>
 			</div>
 		{:else}
 			<div>
