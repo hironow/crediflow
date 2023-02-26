@@ -1,7 +1,7 @@
 import FlowToken from 0x0ae53cb6e3f42a79
 import FungibleToken from 0xee82856bf20e2aa6
 import NonFungibleToken from 0xf8d6e0586b0a20c7
-import Crediflow from 0xf669cb8d41ce0c74
+import Crediflow from 0xeb179c27144f783c
 
 transaction(nftId: UInt64) {
     // REFS

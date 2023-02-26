@@ -254,6 +254,10 @@ pub contract Crediflow: NonFungibleToken {
         pub let contentHost: Address
         pub let contentName: String
 
+        pub fun getCreators(): {Address: {String: AnyStruct}}
+        pub fun getCreatorHolders(): {Address: {String: AnyStruct}}
+        pub fun getAdmirerHolders(): {Address: {String: AnyStruct}}
+
         pub fun requestClaim(from: Address): @FungibleToken.Vault
         pub fun requestTip(from: Address, token: @FungibleToken.Vault)
         pub fun mintCreator(recipient: &Collection{NonFungibleToken.CollectionPublic}): UInt64
@@ -293,6 +297,30 @@ pub contract Crediflow: NonFungibleToken {
 
         pub var claimable: Bool
         pub var tipable: Bool
+
+        pub fun getCreators(): {Address: {String: AnyStruct}} {
+            let creators: {Address: {String: AnyStruct}} = {}
+            for creator in self.creatorMap.keys {
+                creators[creator] = {"role": self.creatorMap[creator]!.role}  // TODO: impl metadata
+            }
+            return creators
+        }
+
+        pub fun getCreatorHolders(): {Address: {String: AnyStruct}} {
+            let creators: {Address: {String: AnyStruct}} = {}
+            for creator in self.creatorNFTMap.keys {
+                creators[creator] = {"id": self.creatorNFTMap[creator]!.id, "serial": self.creatorNFTMap[creator]!.serial}
+            }
+            return creators
+        }
+
+        pub fun getAdmirerHolders(): {Address: {String: AnyStruct}} {
+            let admirers: {Address: {String: AnyStruct}} = {}
+            for admirer in self.admirerNFTMap.keys {
+                admirers[admirer] = {"id": self.admirerNFTMap[admirer]!.id, "serial": self.admirerNFTMap[admirer]!.serial}
+            }
+            return admirers
+        }
 
         pub fun requestClaim(from: Address): @FungibleToken.Vault {
             pre {

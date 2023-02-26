@@ -1,4 +1,4 @@
-import Crediflow from 0xf669cb8d41ce0c74
+import Crediflow from 0xeb179c27144f783c
 
 pub fun main(account: Address): {UFix64: CrediflowContentMetadata} {
     let crediflowContainer = getAccount(account).getCapability(Crediflow.CrediflowContainerPublicPath).borrow<&Crediflow.CrediflowContainer{Crediflow.CrediflowContainerPublic}>()
@@ -7,12 +7,13 @@ pub fun main(account: Address): {UFix64: CrediflowContentMetadata} {
     let returnVal: {UFix64: CrediflowContentMetadata} = {}
 
     for contentId in crediflowContents {
-        let content = crediflowContainer.borrowPublicContentRef(contentId: contentId) ?? panic("This event does not exist in the account.")
+        let content = crediflowContainer.borrowPublicContentRef(contentId: contentId) ?? panic("This content does not exist in the account.")
 
         let metadata = CrediflowContentMetadata(
             _id: content.contentId,
             _name: content.contentName,
             _host: content.contentHost,
+            _creators: content.getCreators()
         )
         returnVal[content.dateCreated] = metadata
     }
@@ -23,10 +24,12 @@ pub struct CrediflowContentMetadata {
     pub let id: UInt64
     pub let name: String
     pub let host: Address
+    pub let creators: {Address: {String: AnyStruct}}
 
-    init(_id: UInt64, _name: String, _host: Address) {
+    init(_id: UInt64, _name: String, _host: Address, _creators: {Address: {String: AnyStruct}}) {
         self.id = _id
         self.name = _name
         self.host = _host
+        self.creators = _creators
     }
 }
