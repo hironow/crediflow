@@ -535,6 +535,10 @@ pub contract Crediflow: NonFungibleToken {
             name: String,
             creatorMap: {Address: RoleIdentifier}
         ): UInt64 {
+            pre {
+                creatorMap.length > 0: "Should have at least one creator"
+            }
+
             let crediflowContent <- create CrediflowContent(
                 _name: name,
                 _host: self.owner!.address, // content owner as host
