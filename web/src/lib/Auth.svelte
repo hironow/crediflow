@@ -4,6 +4,19 @@
 
 	import UserAddress from './UserAddress.svelte';
 	import ContentList from './ContentList.svelte';
+
+	let newContent = {
+		name: '',
+		creators: [{ address: '', role: '' }]
+	};
+
+	function addCreator() {
+		newContent.creators = newContent.creators.concat({ address: '', role: '' });
+	}
+
+	function clearCreator() {
+		newContent.creators = [];
+	}
 </script>
 
 <div class="grid">
@@ -32,20 +45,54 @@
 					>
 				</div>
 				<h2>Controls</h2>
-				<button on:click={initAccount}>Create Crediflow</button>
-
 				<label for="host"
 					>Host
-					<input
-						type="text"
-						id="host"
-						name="host"
-						placeholder="Host"
-						value={$host}
-						disabled
-					/>
+					<input type="text" id="host" name="host" placeholder="Host" bind:value={$host} />
 				</label>
 				<button on:click={() => getAllContent($host)}>Load All Crediflow</button>
+
+				<div>
+					<!-- new content name form -->
+					<label for="name">
+						Name
+						<input
+							type="text"
+							id="name"
+							name="name"
+							placeholder="Content"
+							bind:value={newContent.name}
+						/>
+					</label>
+					<!-- new content creator address and role dynamic additional and removable forms by using dynamic form count -->
+
+					{#each newContent.creators as creator, index}
+						<div class="grid">
+							<label for="role">
+								<input
+									type="text"
+									id="role"
+									name="role"
+									placeholder="Role"
+									bind:value={newContent.creators[index].role}
+								/>
+							</label>
+							<label for="address">
+								<input
+									type="text"
+									id="address"
+									name="address"
+									placeholder="Address"
+									bind:value={newContent.creators[index].address}
+								/>
+							</label>
+						</div>
+					{/each}
+					<div class="grid">
+						<button class="outline" on:click={() => clearCreator()}>Clear All</button>
+						<button class="outline" on:click={() => addCreator()}>Add Creator</button>
+					</div>
+				</div>
+				<button on:click={initAccount}>Create Crediflow</button>
 			</div>
 		{:else}
 			<div>
