@@ -11,7 +11,7 @@
 
 <footer>
 	<p>
-		<a href="https://devfolio.co/flow-hackathon/">FLOW HACKATHON</a> PROJECT by hironow
+		<a href="https://hackathon.flow.com/">flow hackathon</a> project <code>Crediflow</code> by hironow
 	</p>
 	<p>
 		<a href="https://github.com/hironow/crediflow">
