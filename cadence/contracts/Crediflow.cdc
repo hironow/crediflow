@@ -118,25 +118,31 @@ pub contract Crediflow: NonFungibleToken {
         // claim by this Capabilty
         pub let containerCap: Capability<&CrediflowContainer{CrediflowContainerPublic}>
 
-        // claim from the content
-        pub fun claim(): @FungibleToken.Vault {
+        pub fun borrowPublicContentRef(): &Crediflow.CrediflowContent{CrediflowContentPublic} {
             let container = self.containerCap.borrow()
                 ?? panic("Could not borrow a reference to the CrediflowContainer")
-
             let content = container.borrowPublicContentRef(contentId: self.contentId)
                 ?? panic("Could not borrow a reference to the Content")
+            return content
+        }
 
+        // claim from the content
+        pub fun claim(): @FungibleToken.Vault {
+            pre {
+                self.nftType == NFTType.Creator: "Only Creator can claim"
+            }
+
+            let content = self.borrowPublicContentRef()
             return <- content.requestClaim(from: self.owner!.address)
         }
 
         // tip to the content
         pub fun tip(token: @FungibleToken.Vault) {
-            let container = self.containerCap.borrow()
-                ?? panic("Could not borrow a reference to the CrediflowContainer")
+            pre {
+                self.nftType == NFTType.Admirer: "Only Admirer can tip"
+            }
 
-            let content = container.borrowPublicContentRef(contentId: self.contentId)
-                ?? panic("Could not borrow a reference to the Content")
-
+            let content = self.borrowPublicContentRef()
             content.requestTip(from: self.owner!.address, token: <- token)
         }
 
