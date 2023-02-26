@@ -123,7 +123,7 @@ export const sendQuery = async (addr) => {
 	}
 };
 
-export const getContent = async (addr) => {
+export const getAllContent = async (addr) => {
 	let profileQueryResult = false;
 
 	try {

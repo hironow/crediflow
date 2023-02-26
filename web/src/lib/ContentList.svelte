@@ -37,7 +37,7 @@
 				disabled
 			/>
 		</label> -->
-		<details open>
+		<details open={false}>
 			<summary>Creators</summary>
 			{#each Object.entries(content.creators) as [creatorAddress, creatorMetadata], index (creatorAddress)}
 				<div class="grid">
@@ -67,7 +67,7 @@
 				</div>
 			{/each}
 		</details>
-		<details open>
+		<details open={false}>
 			<summary>Holders</summary>
 
 			<div class="grid">

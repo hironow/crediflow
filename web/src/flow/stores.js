@@ -6,4 +6,6 @@ export const transactionStatus = writable(null);
 export const transactionInProgress = writable(false);
 export const txId = writable(false);
 
+export const input = writable(null);
+export const contents = writable(null);
 export const content = writable(null);
