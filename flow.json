@@ -43,14 +43,14 @@
 			"address": "497866d0e68bf2cf",
 			"key": {
 				"type": "file",
-				"location": "/private/hironow.pkey"
+				"location": "./private/hironow.pkey"
 			}
 		},
 		"hironow-test": {
 			"address": "39c64d9429295c04",
 			"key": {
 				"type": "file",
-				"location": "/private/hironow-test.pkey"
+				"location": "./private/hironow-test.pkey"
 			}
 		}
 	},
