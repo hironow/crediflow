@@ -46,28 +46,29 @@ printenv | grep CREDIFLOW
 ```
 
 ```shell
+# only emulator
 flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMIRER 1000.0
 ```
 
 ```shell
 # create crediflow
-flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
+flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
 # get content
-flow scripts execute cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
-export CREDIFLOW_CONTENT_ID=86
+flow scripts execute --network testnet cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
+export CREDIFLOW_CONTENT_ID=136273181
 
 # mint nft
-flow transactions send --signer emulator-creator cadence/transactions/be-creator.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-flow transactions send --signer emulator-admirer cadence/transactions/be-admirer.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
+flow transactions send --signer hironow-test-creator --network testnet cadence/transactions/be-creator.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
+flow transactions send --signer hironow-test-admirer --network testnet cadence/transactions/be-admirer.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
 # get nft
-flow scripts execute cadence/scripts/get-nft-holder.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-export CREDIFLOW_CREATOR_NFT_ID=88
-export CREDIFLOW_ADMIRER_NFT_ID=89
+flow scripts execute --network testnet cadence/scripts/get-nft-holder.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
+export CREDIFLOW_CREATOR_NFT_ID=136274629
+export CREDIFLOW_ADMIRER_NFT_ID=136277604
 
 # tip by nft
-flow transactions send --signer emulator-admirer cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
+flow transactions send --signer hironow-test-admirer --network testnet cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
 # claim by nft
-flow transactions send --signer emulator-creator cadence/transactions/process-claim.cdc $CREDIFLOW_CREATOR_NFT_ID
+flow transactions send --signer hironow-test-creator --network testnet cadence/transactions/process-claim.cdc $CREDIFLOW_CREATOR_NFT_ID
 
 # failed check
 flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
