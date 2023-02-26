@@ -445,7 +445,7 @@ export const executeTip = async (nftId, tipAmount) => {
           }
         }
       `,
-			args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount, t.UFix64)],
+			args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount.toFixed(8), t.UFix64)],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
