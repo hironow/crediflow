@@ -1,6 +1,6 @@
 <script>
 	import { user, contents, creatorNFTHoldersMap, admirerNFTHoldersMap } from '../flow/stores';
-	import { getNFTHolder, mintAdmirerNFT } from '../flow/actions';
+	import { getNFTHolder, mintAdmirerNFT, executeTip } from '../flow/actions';
 
 	// input state
 	let tipAmount = 0.0001;
@@ -20,13 +20,24 @@
 	// 	{ id: 2, name: 'Name 2', host: '0x02', creators: { '0x22': { role: 'publisher' } } }
 	// ];
 
-	// check address is in the list of address
 	/**
+	 * check address is in the list of address
+	 *
 	 * @param {string} address
 	 * @param {string[]} list
 	 */
 	function isAddressInList(address, list) {
-		return list.some((item) => item == address);
+		return list.some((item) => item === address);
+	}
+
+	/**
+	 * get my nftId from the holders
+	 *
+	 * @param {Object} holders
+	 */
+	function getMyNFTIdFromHolders(holders) {
+		let nftId = holders[$user?.addr].id
+		return nftId;
 	}
 </script>
 
@@ -187,7 +198,7 @@
 									$user?.addr,
 									Object.keys($admirerNFTHoldersMap[content.id])
 								)}
-								on:click={() => console.log('Tip')}>Tip</button
+								on:click={() => executeTip(getMyNFTIdFromHolders($admirerNFTHoldersMap[content.id]), tipAmount)}>Tip</button
 							>
 						{/if}
 					</div>

@@ -244,54 +244,6 @@ export const getNFTHolder = async (contentId, host) => {
 	}
 };
 
-export const executeTransaction = async () => {
-	initTransactionState();
-	try {
-		const transactionId = await fcl.mutate({
-			cadence: `
-        import Profile from 0xProfile
-
-        transaction(name: String, color: String, info: String) {
-          prepare(account: AuthAccount) {
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setName(name)
-
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setInfo(info)
-
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setColor(color)
-          }
-        }
-      `,
-			args: (arg, t) => [
-				arg(get(profile).name, t.String),
-				arg(get(profile).color, t.String),
-				arg(get(profile).info, t.String)
-			],
-			payer: fcl.authz,
-			proposer: fcl.authz,
-			authorizations: [fcl.authz],
-			limit: 50
-		});
-
-		txId.set(transactionId);
-
-		fcl.tx(transactionId).subscribe((res) => {
-			transactionStatus.set(res.status);
-			if (res.status === 4) {
-				setTimeout(() => transactionInProgress.set(false), 2000);
-			}
-		});
-	} catch (e) {
-		console.log(e);
-		transactionStatus.set(99);
-	}
-};
-
 export const mintAdmirerNFT = async (contentId, host) => {
 	initTransactionState();
 	try {
@@ -326,7 +278,7 @@ export const mintAdmirerNFT = async (contentId, host) => {
               self.Content.mintAdmirer(recipient: self.AdmirerCollection)
               log("Minted a new Crediflow Admirer NFT for the signer.")
           }
-      }
+        }
       `,
       args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
 			payer: fcl.authz,
@@ -349,34 +301,40 @@ export const mintAdmirerNFT = async (contentId, host) => {
 	}
 };
 
-export const executeTip = async () => {
+export const executeTip = async (nftId, tipAmount) => {
 	initTransactionState();
 	try {
 		const transactionId = await fcl.mutate({
 			cadence: `
+        import FlowToken from 0xFlowToken
+        import FungibleToken from 0xFungibleToken
+        import NonFungibleToken from 0xNonFungibleToken
         import Crediflow from 0xCrediflow
 
-        transaction(name: String, color: String, info: String) {
-          prepare(account: AuthAccount) {
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setName(name)
+        transaction(nftId: UInt64, tipAmount: UFix64) {
+          // REFS
+          let CrediflowNFT: &Crediflow.NFT{Crediflow.Tipper} // as an admirer nft functionality
 
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setInfo(info)
+          let FlowTokenVault: &FlowToken.Vault
 
-            account
-              .borrow<&Profile.Base{Profile.Owner}>(from: Profile.privatePath)!
-              .setColor(color)
+          // single signer
+          prepare(acct: AuthAccount) {
+              // check FT prepared for tip
+              self.FlowTokenVault = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
+                                  ?? panic("Could not borrow the FlowToken.Vault from the signer.")
+              // use own Crediflow NFT
+              let CrediflowCollection = acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath)
+                                  ?? panic("Could not borrow the Crediflow Collection from the signer.")
+              self.CrediflowNFT = CrediflowCollection.borrowCrediflowNFT(id: nftId) ?? panic("Could not borrow the Crediflow NFT from the signer.")
+          }
+
+          execute {
+              self.CrediflowNFT.tip(token: <- self.FlowTokenVault.withdraw(amount: tipAmount))
+              log("Tipped through Crediflow NFT!")
           }
         }
       `,
-			args: (arg, t) => [
-				arg(get(content).name, t.String),
-				arg(get(content).color, t.String),
-				arg(get(content).info, t.String)
-			],
+      args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount, t.UFix64)],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],

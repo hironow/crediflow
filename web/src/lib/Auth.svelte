@@ -13,8 +13,7 @@
 		{:else}
 			<h1>Welcome to Crediflow!</h1>
 			<p>
-				This is a starter app built on Flow. It demonstrates how to use the Flow Client Library
-				(FCL) with SvelteKit.
+				This contract is for <code>Crediflow</code>, a decentralized platform on the <strong>Flow</strong> blockchain that enables creators and admirers to share and reward each other with end credits and tips.
 			</p>
 			{#if !$user?.loggedIn}
 				<p>Login to get started.</p>
