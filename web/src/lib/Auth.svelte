@@ -1,6 +1,6 @@
 <script>
 	import { contents, user, host } from '../flow/stores';
-	import { getAllContent, unauthenticate, logIn, signUp, initAccount } from '../flow/actions';
+	import { getAllContent, unauthenticate, logIn, signUp, createContent } from '../flow/actions';
 
 	import UserAddress from './UserAddress.svelte';
 	import ContentList from './ContentList.svelte';
@@ -16,6 +16,14 @@
 
 	function clearCreator() {
 		newContent.creators = [];
+	}
+
+	function executeCreateContent() {
+		console.log(newContent);
+
+		let addressList = newContent.creators.map((creator) => creator.address);
+		let roleList = newContent.creators.map((creator) => creator.role);
+		createContent(newContent.name, addressList, roleList)
 	}
 </script>
 
@@ -92,7 +100,7 @@
 						<button class="outline" on:click={() => addCreator()}>Add Creator</button>
 					</div>
 				</div>
-				<button on:click={initAccount}>Create Crediflow</button>
+				<button on:click={() => executeCreateContent()}>Create Crediflow</button>
 			</div>
 		{:else}
 			<div>
