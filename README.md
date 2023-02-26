@@ -3,7 +3,7 @@
 This contract is for Crediflow, a decentralized platform on the Flow blockchain that enables creators and admirers to share and reward each other with end credits and tips.
 
 ver. 0.0.1 (prototype):
-[testnet live demo](https://crediflow.vercel.app/) | [product detail](./docs/detail.md) | [product contract sequence](./docs/sequence.md)
+[testnet live demo](https://crediflow.vercel.app/) | [presentation deck](./docs/slide.pdf) | [product detail](./docs/detail.md) | [product contract sequence](./docs/sequence.md)
 
 ver. 0.0.0 (draft):
 [product detail (ja)](./docs/ja/detail-ja.md) | [product contract sequence (ja)](./docs/ja/sequence-ja.md)
