@@ -11,10 +11,10 @@
 
 <footer>
 	<p>
-		visit <a href="https://developers.flow.com">developers.flow.com</a> to learn more.
+		<a href="https://devfolio.co/flow-hackathon/">FLOW HACKATHON</a> PROJECT by hironow
 	</p>
 	<p>
-		<a href="https://github.com/muttoni/fcl-sveltekit">
+		<a href="https://github.com/hironow/crediflow">
 			<svg
 				width="32"
 				height="32"
