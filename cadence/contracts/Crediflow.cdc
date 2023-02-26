@@ -270,7 +270,7 @@ pub contract Crediflow: NonFungibleToken {
     }
 
     //
-    // Crefiflow Content: A Content that can be claimed and tipped
+    // Crediflow Content: A Content that can be claimed and tipped
     //
     pub resource CrediflowContent: CrediflowContentPublic {
         // This is equal to this resource's uuid
