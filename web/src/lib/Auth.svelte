@@ -34,7 +34,11 @@
 			{#if !$user?.loggedIn}
 				<p>Login to get started.</p>
 			{:else}
-				<p>Create a Crediflow and then click on Load all Crediflow to see it here.</p>
+				<p>
+					Click on Load host Crediflow to see it here.
+					<br /><small>or</small><br />
+					Create own Crediflow by your own address and become a host.
+				</p>
 			{/if}
 		{/if}
 	</div>
@@ -48,7 +52,7 @@
 
 				<h2>Controls</h2>
 				<label for="host"
-					>Host
+					>Crediflow Host
 					<input type="text" id="host" name="host" placeholder="Host" bind:value={$host} />
 					<small><code>0x497866d0e68bf2cf</code> is prepared for check</small>
 				</label>
@@ -59,12 +63,11 @@
 				<div>
 					<!-- new content name form -->
 					<label for="name">
-						Name
 						<input
 							type="text"
 							id="name"
 							name="name"
-							placeholder="Content"
+							placeholder="Crediflow Content Name"
 							bind:value={$newContent.name}
 						/>
 					</label>
@@ -77,7 +80,7 @@
 									type="text"
 									id="role"
 									name="role"
-									placeholder="Role"
+									placeholder="Creator Role"
 									bind:value={$newContent.creators[index].role}
 								/>
 							</label>
@@ -86,7 +89,7 @@
 									type="text"
 									id="address"
 									name="address"
-									placeholder="Address"
+									placeholder="Creator Address"
 									bind:value={$newContent.creators[index].address}
 								/>
 							</label>

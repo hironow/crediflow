@@ -50,7 +50,6 @@
 <article class="card">
 	{#each $contents as content, index (content.id)}
 		<label for="name">
-			Name
 			<input type="text" id="name" name="name" value={content.name} disabled />
 		</label>
 		<!-- <label for="address">
@@ -96,7 +95,7 @@
 		</details>
 		<details open={false}>
 			<summary>Holders</summary>
-			<button on:click={() => getNFTHolder(content.id, $host)}>Load holders</button>
+			<button on:click={() => getNFTHolder(content.id, $host)}>Load</button>
 
 			<div>
 				{#if content.id in $creatorNFTHoldersMap}
