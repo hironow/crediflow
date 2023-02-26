@@ -334,6 +334,7 @@ pub contract Crediflow: NonFungibleToken {
             }
             post {
                 self.creatorValutMap[from]!.balance == 0.0: "Should be claimed all balance"
+                self.claimed[from] != nil: "Should be claimed any balance"
                 self.claimed[from]!.balance > 0.0: "Should be claimed any balance"
             }
 
@@ -371,6 +372,7 @@ pub contract Crediflow: NonFungibleToken {
                 self.admirerNFTMap[from] != nil: "You are not allowed to tip this CrediflowContent"
             }
             post {
+                self.tipped[from] != nil: "Should be tipped any balance"
                 self.tipped[from]!.balance > 0.0: "Should be tipped any balance"
             }
 
