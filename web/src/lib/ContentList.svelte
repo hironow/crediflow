@@ -64,7 +64,7 @@
 				disabled
 			/>
 		</label> -->
-		<details open={true}>
+		<details open={false}>
 			<summary>Creators</summary>
 			{#each Object.entries(content.creators) as [creatorAddress, creatorMetadata], index (creatorAddress)}
 				<div class="grid">
@@ -94,7 +94,7 @@
 				</div>
 			{/each}
 		</details>
-		<details open={true}>
+		<details open={false}>
 			<summary>Holders</summary>
 			<button on:click={() => getNFTHolder(content.id, '0x497866d0e68bf2cf')}>Load holders</button>
 

@@ -53,7 +53,7 @@ flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMI
 
 ```shell
 # create crediflow
-flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow Tester" "[$CREDIFLOW_CREATOR, $CREDIFLOW_LILICO_TESTER]" '["engineer", "tester"]'
+flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
 # get content
 flow scripts execute --network testnet cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
 export CREDIFLOW_CONTENT_ID=136273181
@@ -73,8 +73,9 @@ flow transactions send --signer hironow-test-creator --network testnet cadence/t
 
 # another create crediflow
 flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow Tester" "[$CREDIFLOW_CREATOR, $CREDIFLOW_LILICO_TESTER]" '["engineer", "tester"]'
+flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow Updater" "[$CREDIFLOW_CREATOR, $CREDIFLOW_LILICO_TESTER]" '["updater", "tester"]'
 
 # failed check
-flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
+flow transactions send --signer hironow --network testnet cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
 ```
  
