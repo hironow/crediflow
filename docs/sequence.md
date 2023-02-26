@@ -18,7 +18,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Admirer
-    participant Contract
+    participant Contract as Contract thought Host
     participant Creator
 
     Admirer->>Contract: request (tippable) nft
@@ -39,7 +39,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Admirer
-    participant Contract
+    participant Contract as Contract thought Host
     participant Creator
 
     Note over Admirer,Creator: Tipping evenly
