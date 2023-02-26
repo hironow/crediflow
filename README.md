@@ -1,9 +1,9 @@
 # Crediflow
 
-ver. 0.0.1 (prototype)
-
+ver. 0.0.1 (prototype):
 [testnet live demo](https://crediflow.vercel.app/)
 
+ver. 0.0.0 (draft):
 [product detail (ja)](./docs/ja/detail-ja.md) | [product contract sequence (ja)](./docs/ja/sequence-ja.md)
 
 ## Glossary
