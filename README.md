@@ -41,6 +41,7 @@ process-claim
 export CREDIFLOW_HOST=0x497866d0e68bf2cf
 export CREDIFLOW_CREATOR=0xa62b28e5da5d3609
 export CREDIFLOW_ADMIRER=0x06909bc5ba14c266
+export CREDIFLOW_LILICO_TESTER=0x5995a3d05ce1be92
 
 printenv | grep CREDIFLOW
 ```
@@ -69,6 +70,9 @@ export CREDIFLOW_ADMIRER_NFT_ID=136277604
 flow transactions send --signer hironow-test-admirer --network testnet cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
 # claim by nft
 flow transactions send --signer hironow-test-creator --network testnet cadence/transactions/process-claim.cdc $CREDIFLOW_CREATOR_NFT_ID
+
+# another create crediflow
+flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow Tester" "[$CREDIFLOW_CREATOR, $CREDIFLOW_LILICO_TESTER]" '["engineer", "tester"]'
 
 # failed check
 flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
