@@ -1,5 +1,7 @@
 # Crediflow
 
+This contract is for Crediflow, a decentralized platform on the Flow blockchain that enables creators and admirers to share and reward each other with end credits and tips.
+
 ver. 0.0.1 (prototype):
 [testnet live demo](https://crediflow.vercel.app/)
 
@@ -46,7 +48,7 @@ process-claim
 ### Shortcut
 
 ```shell
-export CREDIFLOW_HOST=<addr>
+export CREDIFLOW_HOST=0x497866d0e68bf2cf  # only testnet
 export CREDIFLOW_CREATOR=<addr>
 export CREDIFLOW_ADMIRER=<addr>
 export CREDIFLOW_LILICO_TESTER=0x5995a3d05ce1be92  # only testnet
