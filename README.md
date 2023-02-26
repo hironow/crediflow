@@ -1,6 +1,8 @@
 # Crediflow
 
-ver. 0.0.0
+ver. 0.0.1 (prototype)
+
+[testnet live demo](https://crediflow.vercel.app/)
 
 [product detail (ja)](./docs/ja/detail-ja.md) | [product contract sequence (ja)](./docs/ja/sequence-ja.md)
 
@@ -14,6 +16,12 @@ ver. 0.0.0
 * `Tip` is the process that allows an Admirer to deposit FT into the Pool as a form of admiration and respect towards the Creator.
 
 This contract does not define anything like royalties. This is because if this contract considers itself content, it will benefit from its Crediflow.
+
+## Contract
+
+| Network         | Contract Address     |
+| --------------- | -------------------- |
+| Testnet         | `0x39c64d9429295c04` |
 
 ## Methods
 
