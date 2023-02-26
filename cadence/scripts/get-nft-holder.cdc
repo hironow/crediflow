@@ -1,4 +1,4 @@
-import Crediflow from 0xeb179c27144f783c
+import Crediflow from 0x39c64d9429295c04
 
 pub fun main(contentId: UInt64, host: Address): CrediflowContentNFTHolderMetadata {
     let crediflowContainer = getAccount(host).getCapability(Crediflow.CrediflowContainerPublicPath).borrow<&Crediflow.CrediflowContainer{Crediflow.CrediflowContainerPublic}>()
