@@ -8,12 +8,14 @@
 
 <div class="grid">
 	<div class="mb-2">
-		{#if $user?.loggedIn && $contents.length > 0 }
+		{#if $user?.loggedIn && $contents.length > 0}
 			<ContentList />
 		{:else}
 			<h1>Welcome to Crediflow!</h1>
 			<p>
-				This contract is for <code>Crediflow</code>, a decentralized platform on the <strong>Flow</strong> blockchain that enables creators and admirers to share and reward each other with end credits and tips.
+				This contract is for <code>Crediflow</code>, a decentralized platform on the
+				<strong>Flow</strong> blockchain that enables creators and admirers to share and reward each
+				other with end credits and tips.
 			</p>
 			{#if !$user?.loggedIn}
 				<p>Login to get started.</p>
