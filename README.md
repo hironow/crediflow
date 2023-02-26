@@ -21,7 +21,7 @@ This contract does not define anything like royalties. This is because if this c
 
 | Network         | Contract Address     |
 | --------------- | -------------------- |
-| Testnet         | `0x39c64d9429295c04` |
+| Testnet         | [0x39c64d9429295c04](https://testnet.flowscan.org/contract/A.39c64d9429295c04.Crediflow/overview) |
 
 ## Methods
 
