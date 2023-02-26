@@ -6,10 +6,10 @@
 // The main focus of Crediflow is to provide a platform for creators to receive end credits and admirers to reward them.
 // Special thanks to FLOAT's contract for the codebase.
 
-import FlowToken from 0x0ae53cb6e3f42a79
-import FungibleToken from 0xee82856bf20e2aa6
-import NonFungibleToken from 0xf8d6e0586b0a20c7
-import MetadataViews from 0xf8d6e0586b0a20c7
+import FlowToken from "./core/FlowToken.cdc"
+import FungibleToken from "./core/FungibleToken.cdc"
+import NonFungibleToken from "./core/NonFungibleToken.cdc"
+import MetadataViews from "./core/MetadataViews.cdc"
 
 //
 // Crediflow: credit + flow
