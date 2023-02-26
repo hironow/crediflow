@@ -53,7 +53,7 @@ flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMI
 
 ```shell
 # create crediflow
-flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
+flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow Tester" "[$CREDIFLOW_CREATOR, $CREDIFLOW_LILICO_TESTER]" '["engineer", "tester"]'
 # get content
 flow scripts execute --network testnet cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
 export CREDIFLOW_CONTENT_ID=136273181

@@ -130,20 +130,25 @@
 					{/each}
 
 					<div class="grid">
-						<button
-							class="outline"
-							disabled={!isAddressInList($user?.addr, Object.keys(content.creators))}
-							on:click={() => mintCreatorNFT(content.id, '0x497866d0e68bf2cf')}>Creator Mint</button
-						>
-						<button
-							class="outline"
-							disabled={!isAddressInList(
-								$user?.addr,
-								Object.keys($creatorNFTHoldersMap[content.id])
-							)}
-							on:click={() => executeTip(getMyNFTIdFromHolders($creatorNFTHoldersMap[content.id]))}
-							>Claim</button
-						>
+						{#if !isAddressInList($user?.addr, Object.keys($creatorNFTHoldersMap[content.id]))}
+							<button
+								class="outline"
+								disabled={!isAddressInList($user?.addr, Object.keys(content.creators))}
+								on:click={() => mintCreatorNFT(content.id, '0x497866d0e68bf2cf')}
+								>Creator Mint</button
+							>
+						{:else}
+							<button
+								class="outline"
+								disabled={!isAddressInList(
+									$user?.addr,
+									Object.keys($creatorNFTHoldersMap[content.id])
+								)}
+								on:click={() =>
+									executeClaim(getMyNFTIdFromHolders($creatorNFTHoldersMap[content.id]))}
+								>Claim</button
+							>
+						{/if}
 					</div>
 				{/if}
 			</div>
@@ -155,7 +160,7 @@
 						<div class="grid">
 							<label for="serial">
 								<input
-									type="text"
+									type="number"
 									id="serial"
 									name="serial"
 									value={nftData.serial}
@@ -193,6 +198,7 @@
 							<label for="tipAmount">
 								<input
 									type="number"
+									step="0.001"
 									id="tipAmount"
 									name="tipAmount"
 									bind:value={tipAmount}
