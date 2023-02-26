@@ -53,7 +53,7 @@ by implementing direct payment mechanisms.
 ⬇
 Fair payments are made,
 and creators can receive support payments
-from their supporters.
+from their admirers.
 
 ---
 <!-- 
