@@ -244,6 +244,63 @@ export const getNFTHolder = async (contentId, host) => {
 	}
 };
 
+export const mintCreatorNFT = async (contentId, host) => {
+	initTransactionState();
+	try {
+		const transactionId = await fcl.mutate({
+			cadence: `
+        import FlowToken from 0xFlowToken
+        import FungibleToken from 0xFungibleToken
+        import NonFungibleToken from 0xNonFungibleToken
+        import Crediflow from 0xCrediflow
+
+        transaction(contentId: UInt64, host: Address) {
+          // REFS
+          let Content: &Crediflow.CrediflowContent{Crediflow.CrediflowContentPublic}
+          let CreatorCollection: &Crediflow.Collection
+
+          // single signer
+          prepare(acct: AuthAccount) {
+              // SETUP Crediflow NFT Collection for Creator
+              if acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath) == nil {
+                  acct.save(<-Crediflow.createEmptyCollection(), to: Crediflow.CrediflowCollectionStoragePath)
+                  acct.link<&Crediflow.Collection{NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic}>(Crediflow.CrediflowCollectionPublicPath, target: Crediflow.CrediflowCollectionStoragePath)
+              }
+
+              // Get Crediflow Content from the host
+              let Container = getAccount(host).getCapability(Crediflow.CrediflowContainerPublicPath).borrow<&Crediflow.CrediflowContainer{Crediflow.CrediflowContainerPublic}>()
+                  ?? panic("Could not borrow the public CrediflowContainer from the host.")
+              self.Content = Container.borrowPublicContentRef(contentId: contentId) ?? panic("This content does not exist.")
+              self.CreatorCollection = acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath) ?? panic("Could not get the Collection from the signer.")
+          }
+
+          execute {
+              self.Content.mintCreator(recipient: self.CreatorCollection)
+              log("Minted a new Crediflow Creator NFT for the signer.")
+          }
+        }
+      `,
+			args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
+			payer: fcl.authz,
+			proposer: fcl.authz,
+			authorizations: [fcl.authz],
+			limit: 500
+		});
+
+		txId.set(transactionId);
+
+		fcl.tx(transactionId).subscribe((res) => {
+			transactionStatus.set(res.status);
+			if (res.status === 4) {
+				setTimeout(() => transactionInProgress.set(false), 2000);
+			}
+		});
+	} catch (e) {
+		console.log(e);
+		transactionStatus.set(99);
+	}
+};
+
 export const mintAdmirerNFT = async (contentId, host) => {
 	initTransactionState();
 	try {
@@ -280,7 +337,61 @@ export const mintAdmirerNFT = async (contentId, host) => {
           }
         }
       `,
-      args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
+			args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
+			payer: fcl.authz,
+			proposer: fcl.authz,
+			authorizations: [fcl.authz],
+			limit: 500
+		});
+
+		txId.set(transactionId);
+
+		fcl.tx(transactionId).subscribe((res) => {
+			transactionStatus.set(res.status);
+			if (res.status === 4) {
+				setTimeout(() => transactionInProgress.set(false), 2000);
+			}
+		});
+	} catch (e) {
+		console.log(e);
+		transactionStatus.set(99);
+	}
+};
+
+export const executeClaim = async (nftId) => {
+	initTransactionState();
+	try {
+		const transactionId = await fcl.mutate({
+			cadence: `
+        import FlowToken from 0xFlowToken
+        import FungibleToken from 0xFungibleToken
+        import NonFungibleToken from 0xNonFungibleToken
+        import Crediflow from 0xCrediflow
+
+        transaction(nftId: UInt64) {
+          // REFS
+          let CrediflowNFT: &Crediflow.NFT{Crediflow.Claimer} // as a creator nft functionality
+
+          let FlowTokenVault: &FlowToken.Vault
+
+          // single signer
+          prepare(acct: AuthAccount) {
+              // check FT prepared for tip
+              self.FlowTokenVault = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
+                                  ?? panic("Could not borrow the FlowToken.Vault from the signer.")
+              // use own Crediflow NFT
+              let CrediflowCollection = acct.borrow<&Crediflow.Collection>(from: Crediflow.CrediflowCollectionStoragePath)
+                                  ?? panic("Could not borrow the Crediflow Collection from the signer.")
+              self.CrediflowNFT = CrediflowCollection.borrowCrediflowNFT(id: nftId) ?? panic("Could not borrow the Crediflow NFT from the signer.")
+          }
+
+          execute {
+              self.FlowTokenVault.deposit(from: <- self.CrediflowNFT.claim())
+              log("Claimed through Crediflow NFT!")
+          }
+        }
+      `,
+			args: (arg, t) => [arg(nftId, t.UInt64)],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
@@ -334,7 +445,7 @@ export const executeTip = async (nftId, tipAmount) => {
           }
         }
       `,
-      args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount, t.UFix64)],
+			args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount, t.UFix64)],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],

@@ -1,6 +1,12 @@
 <script>
 	import { user, contents, creatorNFTHoldersMap, admirerNFTHoldersMap } from '../flow/stores';
-	import { getNFTHolder, mintAdmirerNFT, executeTip } from '../flow/actions';
+	import {
+		getNFTHolder,
+		mintCreatorNFT,
+		mintAdmirerNFT,
+		executeClaim,
+		executeTip
+	} from '../flow/actions';
 
 	// input state
 	let tipAmount = 0.0001;
@@ -36,7 +42,7 @@
 	 * @param {Object} holders
 	 */
 	function getMyNFTIdFromHolders(holders) {
-		let nftId = holders[$user?.addr].id
+		let nftId = holders[$user?.addr].id;
 		return nftId;
 	}
 </script>
@@ -127,7 +133,7 @@
 						<button
 							class="outline"
 							disabled={!isAddressInList($user?.addr, Object.keys(content.creators))}
-							on:click={() => console.log('Creator Mint')}>Creator Mint</button
+							on:click={() => mintCreatorNFT(content.id, '0x497866d0e68bf2cf')}>Creator Mint</button
 						>
 						<button
 							class="outline"
@@ -135,7 +141,8 @@
 								$user?.addr,
 								Object.keys($creatorNFTHoldersMap[content.id])
 							)}
-							on:click={() => console.log('Claim')}>Claim</button
+							on:click={() => executeTip(getMyNFTIdFromHolders($creatorNFTHoldersMap[content.id]))}
+							>Claim</button
 						>
 					</div>
 				{/if}
@@ -198,7 +205,9 @@
 									$user?.addr,
 									Object.keys($admirerNFTHoldersMap[content.id])
 								)}
-								on:click={() => executeTip(getMyNFTIdFromHolders($admirerNFTHoldersMap[content.id]), tipAmount)}>Tip</button
+								on:click={() =>
+									executeTip(getMyNFTIdFromHolders($admirerNFTHoldersMap[content.id]), tipAmount)}
+								>Tip</button
 							>
 						{/if}
 					</div>
