@@ -38,9 +38,9 @@ process-claim
 ### Shortcut
 
 ```shell
-export CREDIFLOW_HOST=0x10c4fef62310c807
-export CREDIFLOW_CREATOR=0x06909bc5ba14c266
-export CREDIFLOW_ADMIRER=0xe2f72218abeec2b9
+export CREDIFLOW_HOST=0xf4a3472b32eac8d8
+export CREDIFLOW_CREATOR=0x10c4fef62310c807
+export CREDIFLOW_ADMIRER=0x06909bc5ba14c266
 
 printenv | grep CREDIFLOW
 ```
@@ -50,19 +50,19 @@ flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMI
 ```
 
 ```shell
-flow scripts execute cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
-
-# create content
+# create crediflow
 flow transactions send --signer emulator-hironow cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
+# get content
+flow scripts execute cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
 export CREDIFLOW_CONTENT_ID=74
 
 # mint nft
 flow transactions send --signer emulator-creator cadence/transactions/be-creator.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
 flow transactions send --signer emulator-admirer cadence/transactions/be-admirer.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-
+# get nft
 flow scripts execute cadence/scripts/get-nft-holder.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-export CREDIFLOW_ADMIRER_NFT_ID=79
 export CREDIFLOW_CREATOR_NFT_ID=77
+export CREDIFLOW_ADMIRER_NFT_ID=79
 
 # tip by nft
 flow transactions send --signer emulator-admirer cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
@@ -72,3 +72,4 @@ flow transactions send --signer emulator-creator cadence/transactions/process-cl
 # failed check
 flow transactions send --signer emulator-hironow cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
 ```
+ 
