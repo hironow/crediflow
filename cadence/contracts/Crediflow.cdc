@@ -1,10 +1,8 @@
-// MADE BY: hironow
+// Crediflow MADE BY: hironow
 
-// This contact if for Crediflow, a proof of end credits and tipping platform on Flow blockchain.
-// Crediflow is a decentralized platform for creators and admirers to share and reward each other.
+// This contract is for Crediflow, a decentralized platform on the Flow blockchain that enables creators and admirers to share and reward each other with end credits and tips.
 
-// The main focus of Crediflow is to provide a platform for creators to receive end credits and admirers to reward them.
-// Special thanks to FLOAT's contract for the codebase.
+// The main purpose of Crediflow is to provide a platform for creators to receive recognition for their work and for admirers to show their appreciation and support through tipping.
 
 import FlowToken from "./core/FlowToken.cdc"
 import FungibleToken from "./core/FungibleToken.cdc"
@@ -12,8 +10,7 @@ import NonFungibleToken from "./core/NonFungibleToken.cdc"
 import MetadataViews from "./core/MetadataViews.cdc"
 
 //
-// Crediflow: credit + flow
-//  - contents' end `credit`s and `flow` blockchain
+// Crediflow combines "Credit" and "Flow" to provide a decentralized platform for creators and admirers to share and reward each other's content.
 //
 pub contract Crediflow: NonFungibleToken {
     // PATHS

@@ -45,6 +45,13 @@
 				"type": "file",
 				"location": "/private/hironow.pkey"
 			}
+		},
+		"hironow-test": {
+			"address": "39c64d9429295c04",
+			"key": {
+				"type": "file",
+				"location": "/private/hironow-test.pkey"
+			}
 		}
 	},
 	"deployments": {
@@ -66,6 +73,11 @@
 			],
 			"emulator-hironow": [
 				"Empty"
+			]
+		},
+		"testnet": {
+			"hironow-test": [
+				"Crediflow"
 			]
 		}
 	}
