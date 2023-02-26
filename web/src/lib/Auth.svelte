@@ -1,29 +1,22 @@
 <script>
-	import { contents, user, host } from '../flow/stores';
+	import { contents, user, host, newContent } from '../flow/stores';
 	import { getAllContent, unauthenticate, logIn, signUp, createContent } from '../flow/actions';
 
 	import UserAddress from './UserAddress.svelte';
 	import ContentList from './ContentList.svelte';
 
-	let newContent = {
-		name: '',
-		creators: [{ address: '', role: '' }]
-	};
-
 	function addCreator() {
-		newContent.creators = newContent.creators.concat({ address: '', role: '' });
+		newContent.update((state) => {
+			state.creators = state.creators.concat({ address: '', role: '' });
+			return state;
+		});
 	}
 
 	function clearCreator() {
-		newContent.creators = [];
-	}
-
-	function executeCreateContent() {
-		console.log(newContent);
-
-		let addressList = newContent.creators.map((creator) => creator.address);
-		let roleList = newContent.creators.map((creator) => creator.role);
-		createContent(newContent.name, addressList, roleList)
+		newContent.update((state) => {
+			state.creators = [];
+			return state;
+		});
 	}
 </script>
 
@@ -52,12 +45,16 @@
 					You are now logged in as: <UserAddress /><button on:click={unauthenticate}>Log Out</button
 					>
 				</div>
+
 				<h2>Controls</h2>
 				<label for="host"
 					>Host
 					<input type="text" id="host" name="host" placeholder="Host" bind:value={$host} />
+					<small><code>0x497866d0e68bf2cf</code> is prepared for check</small>
 				</label>
-				<button on:click={() => getAllContent($host)}>Load All Crediflow</button>
+				<button on:click={() => getAllContent($host)}>Load Host Crediflow</button>
+
+				<hr />
 
 				<div>
 					<!-- new content name form -->
@@ -68,12 +65,12 @@
 							id="name"
 							name="name"
 							placeholder="Content"
-							bind:value={newContent.name}
+							bind:value={$newContent.name}
 						/>
 					</label>
 					<!-- new content creator address and role dynamic additional and removable forms by using dynamic form count -->
 
-					{#each newContent.creators as creator, index}
+					{#each $newContent.creators as creator, index}
 						<div class="grid">
 							<label for="role">
 								<input
@@ -81,7 +78,7 @@
 									id="role"
 									name="role"
 									placeholder="Role"
-									bind:value={newContent.creators[index].role}
+									bind:value={$newContent.creators[index].role}
 								/>
 							</label>
 							<label for="address">
@@ -90,7 +87,7 @@
 									id="address"
 									name="address"
 									placeholder="Address"
-									bind:value={newContent.creators[index].address}
+									bind:value={$newContent.creators[index].address}
 								/>
 							</label>
 						</div>
@@ -100,7 +97,14 @@
 						<button class="outline" on:click={() => addCreator()}>Add Creator</button>
 					</div>
 				</div>
-				<button on:click={() => executeCreateContent()}>Create Crediflow</button>
+				<button
+					on:click={() =>
+						createContent(
+							$newContent.name,
+							$newContent.creators.map((creator) => creator.address),
+							$newContent.creators.map((creator) => creator.role)
+						)}>Create Own Crediflow</button
+				>
 			</div>
 		{:else}
 			<div>

@@ -100,7 +100,12 @@
 
 			<div>
 				{#if content.id in $creatorNFTHoldersMap}
-					<small><i>Creator NFT holders</i></small>
+					<small
+						><i
+							>Creator NFT holders: {Object.entries($creatorNFTHoldersMap[content.id]).length ??
+								0}</i
+						></small
+					>
 					{#each Object.entries($creatorNFTHoldersMap[content.id]) as [address, nftData], index (address)}
 						<div class="grid">
 							<label for="serial">
@@ -154,7 +159,12 @@
 
 			<div>
 				{#if content.id in $admirerNFTHoldersMap}
-					<small><i>Admirer NFT holders</i></small>
+					<small
+						><i
+							>Admirer NFT holders: {Object.entries($admirerNFTHoldersMap[content.id]).length ??
+								0}</i
+						></small
+					>
 					{#each Object.entries($admirerNFTHoldersMap[content.id]) as [address, nftData], index (address)}
 						<div class="grid">
 							<label for="serial">
