@@ -1,5 +1,5 @@
 <script>
-	import { contents, user } from '../flow/stores';
+	import { contents, user, host } from '../flow/stores';
 	import { getAllContent, unauthenticate, logIn, signUp, initAccount } from '../flow/actions';
 
 	import UserAddress from './UserAddress.svelte';
@@ -41,11 +41,11 @@
 						id="host"
 						name="host"
 						placeholder="Host"
-						value={'0x497866d0e68bf2cf'}
+						value={$host}
 						disabled
 					/>
 				</label>
-				<button on:click={() => getAllContent('0x497866d0e68bf2cf')}>Load All Crediflow</button>
+				<button on:click={() => getAllContent($host)}>Load All Crediflow</button>
 			</div>
 		{:else}
 			<div>
