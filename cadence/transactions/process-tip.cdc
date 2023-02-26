@@ -1,7 +1,7 @@
-import FlowToken from 0x7e60df042a9c0868
-import FungibleToken from 0x9a0766d93b6608b7
-import NonFungibleToken from 0x631e88ae7f1d7c20
-import Crediflow from 0x39c64d9429295c04
+import FlowToken from "../contracts/core/FlowToken.cdc"
+import FungibleToken from "../contracts/core/FungibleToken.cdc"
+import NonFungibleToken from "../contracts/core/NonFungibleToken.cdc"
+import Crediflow from "../contracts/Crediflow.cdc"
 
 transaction(nftId: UInt64, tipAmount: UFix64) {
     // REFS

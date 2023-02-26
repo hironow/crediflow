@@ -46,10 +46,10 @@ process-claim
 ### Shortcut
 
 ```shell
-export CREDIFLOW_HOST=0x497866d0e68bf2cf
-export CREDIFLOW_CREATOR=0xa62b28e5da5d3609
-export CREDIFLOW_ADMIRER=0x06909bc5ba14c266
-export CREDIFLOW_LILICO_TESTER=0x5995a3d05ce1be92
+export CREDIFLOW_HOST=<addr>
+export CREDIFLOW_CREATOR=<addr>
+export CREDIFLOW_ADMIRER=<addr>
+export CREDIFLOW_LILICO_TESTER=0x5995a3d05ce1be92  # only testnet
 
 printenv | grep CREDIFLOW
 ```
@@ -64,15 +64,15 @@ flow transactions send cadence/transactions/core/mint-tokens.cdc $CREDIFLOW_ADMI
 flow transactions send --signer hironow --network testnet cadence/transactions/create-content.cdc "Crediflow" "[$CREDIFLOW_CREATOR]" '["engineer"]'
 # get content
 flow scripts execute --network testnet cadence/scripts/get-all-content.cdc $CREDIFLOW_HOST
-export CREDIFLOW_CONTENT_ID=136273181
+export CREDIFLOW_CONTENT_ID=<id>
 
 # mint nft
 flow transactions send --signer hironow-test-creator --network testnet cadence/transactions/be-creator.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
 flow transactions send --signer hironow-test-admirer --network testnet cadence/transactions/be-admirer.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
 # get nft
 flow scripts execute --network testnet cadence/scripts/get-nft-holder.cdc $CREDIFLOW_CONTENT_ID $CREDIFLOW_HOST
-export CREDIFLOW_CREATOR_NFT_ID=136274629
-export CREDIFLOW_ADMIRER_NFT_ID=136277604
+export CREDIFLOW_CREATOR_NFT_ID=<id>
+export CREDIFLOW_ADMIRER_NFT_ID=<id>
 
 # tip by nft
 flow transactions send --signer hironow-test-admirer --network testnet cadence/transactions/process-tip.cdc $CREDIFLOW_ADMIRER_NFT_ID 10.0
