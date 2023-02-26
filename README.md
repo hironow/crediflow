@@ -78,4 +78,3 @@ flow transactions send --signer hironow --network testnet cadence/transactions/c
 # failed check
 flow transactions send --signer hironow --network testnet cadence/transactions/close-pool.cdc $CREDIFLOW_CONTENT_ID
 ```
- 

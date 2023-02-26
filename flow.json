@@ -23,6 +23,69 @@
 			"address": "eb179c27144f783c",
 			"key": "acb9a60c03ec86a3e20225fc3efd385dbdddb40f35a8ecd41070f1c3134cf32f"
 		},
+		"dummy-test-1": {
+			"address": "f0e099e78fc50f04",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-1.pkey"
+			}
+		},
+		"dummy-test-2": {
+			"address": "f5c72382f54be97f",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-2.pkey"
+			}
+		},
+		"dummy-test-3": {
+			"address": "0cdecdf5b1309de8",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-3.pkey"
+			}
+		},
+		"dummy-test-4": {
+			"address": "ed2c6d64468bcfad",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-4.pkey"
+			}
+		},
+		"dummy-test-5": {
+			"address": "fb780857df8fc5cc",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-5.pkey"
+			}
+		},
+		"dummy-test-6": {
+			"address": "e6065ffd8a0eb184",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-6.pkey"
+			}
+		},
+		"dummy-test-7": {
+			"address": "f4a265d1ccddd3d9",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-7.pkey"
+			}
+		},
+		"dummy-test-8": {
+			"address": "e9dc327b995ca791",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-8.pkey"
+			}
+		},
+		"dummy-test-9": {
+			"address": "1e7af7d9f7e3ffb5",
+			"key": {
+				"type": "file",
+				"location": "./private/dummy-test-9.pkey"
+			}
+		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
