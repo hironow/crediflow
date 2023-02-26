@@ -50,7 +50,7 @@
 <article class="card">
 	{#each $contents as content, index (content.id)}
 		<label for="name">
-			<input type="text" id="name" name="name" value={content.name} disabled />
+			<input type="text" id="name" name="name" value={content.name} readonly />
 		</label>
 		<!-- <label for="address">
 			Host
@@ -60,7 +60,7 @@
 				name="address"
 				value={content.host}
 				placeholder="Address"
-				disabled
+				readonly
 			/>
 		</label> -->
 		<details open={false}>
@@ -74,7 +74,7 @@
 							name="address"
 							value={creatorMetadata.role}
 							placeholder="Address"
-							disabled
+							readonly
 						/>
 					</label>
 					<label for="address">
@@ -84,7 +84,7 @@
 							name="address"
 							value={creatorAddress}
 							placeholder="Address"
-							disabled
+							readonly
 						/>
 						{#if creatorAddress == $user?.addr}
 							<small><mark>you</mark></small>
@@ -114,7 +114,7 @@
 									name="serial"
 									value={nftData.serial}
 									placeholder="Serial"
-									disabled
+									readonly
 								/>
 							</label>
 							<label for="address">
@@ -124,7 +124,7 @@
 									name="address"
 									value={address}
 									placeholder="Address"
-									disabled
+									readonly
 								/>
 								{#if address == $user?.addr}
 									<small><mark>you</mark></small>
@@ -173,7 +173,7 @@
 									name="serial"
 									value={nftData.serial}
 									placeholder="Serial"
-									disabled
+									readonly
 								/>
 							</label>
 							<label for="address">
@@ -183,7 +183,7 @@
 									name="address"
 									value={address}
 									placeholder="Address"
-									disabled
+									readonly
 								/>
 								{#if address == $user?.addr}
 									<small><mark>you</mark></small>
