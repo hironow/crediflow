@@ -5,12 +5,19 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	texttospeech "cloud.google.com/go/texttospeech/apiv1"
 	"cloud.google.com/go/texttospeech/apiv1/texttospeechpb"
 )
 
 func main() {
+	if len(os.Args) != 3 {
+		log.Fatalf("Usage: %s <text-to-speech> <output.mp3>", os.Args[0])
+	}
+	text := os.Args[1]
+	output := os.Args[2]
+
 	// Instantiates a client.
 	ctx := context.Background()
 
@@ -25,7 +32,7 @@ func main() {
 	req := texttospeechpb.SynthesizeSpeechRequest{
 		// Set the text input to be synthesized.
 		Input: &texttospeechpb.SynthesisInput{
-			InputSource: &texttospeechpb.SynthesisInput_Text{Text: "Hello, World!"},
+			InputSource: &texttospeechpb.SynthesisInput_Text{Text: text},
 		},
 		// Build the voice request, select the language code ("en-US") and the SSML
 		// voice gender ("neutral").
@@ -45,7 +52,7 @@ func main() {
 	}
 
 	// The resp's AudioContent is binary.
-	filename := "output.mp3"
+	filename := output
 	err = ioutil.WriteFile(filename, resp.AudioContent, 0644)
 	if err != nil {
 		log.Fatal(err)
