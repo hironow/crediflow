@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -53,7 +52,8 @@ func main() {
 
 	// The resp's AudioContent is binary.
 	filename := output
-	err = ioutil.WriteFile(filename, resp.AudioContent, 0644)
+	// write to file
+	err = os.WriteFile(filename, resp.AudioContent, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
