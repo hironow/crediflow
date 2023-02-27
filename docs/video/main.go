@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -10,13 +12,7 @@ import (
 	"cloud.google.com/go/texttospeech/apiv1/texttospeechpb"
 )
 
-func main() {
-	if len(os.Args) != 3 {
-		log.Fatalf("Usage: %s <text-to-speech> <output.mp3>", os.Args[0])
-	}
-	text := os.Args[1]
-	output := os.Args[2]
-
+func execTextToSpeech(text string, output string) {
 	// Instantiates a client.
 	ctx := context.Background()
 
@@ -58,4 +54,41 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Audio content written to file: %v\n", filename)
+}
+
+func main() {
+	// if len(os.Args) != 3 {
+	// 	log.Fatalf("Usage: %s <text-to-speech> <output.mp3>", os.Args[0])
+	// }
+	// text := os.Args[1]
+	// output := os.Args[2]
+
+	if len(os.Args) != 2 {
+		log.Fatalf("Usage: %s <text-to-speech.csv>", os.Args[0])
+	}
+
+	csvFile, err := os.Open(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer csvFile.Close()
+
+	r := csv.NewReader(csvFile)
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		// exec with record
+		text := record[0]
+		output := record[1]
+		if text == "" || output == "" {
+			break
+		}
+		execTextToSpeech(text, output)
+	}
+
 }

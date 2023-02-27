@@ -1,0 +1,33 @@
+"Hello. The main purpose of Crediflow is to provide a platform where Creators can receive recognition for their work and Admirers can show appreciation and support through tipping.
+
+Now, let's sign up. First, let's try throwing a tip as an Admirer by obtaining an NFT.
+
+We load the registered Crediflow and can see its Creator. We also load the NFT holder and perform an ""Admirer Mint.""
+
+Before execution, let's check the number of NFTs to make it clear that it will increase later.
+
+Let's send the transaction. After that, we press the ""Load"" button, and we can see that we have become an NFT holder.
+
+Let's also check the contract event.
+
+Let's check the account's Flow balance and try to tip 95 FLOW. We send the transaction.
+
+Let's also check the contract event. The balance has been properly reduced.",01.mp3
+"Next, let's try getting an NFT and claiming it as a Creator. First, let's perform a ""Creator Mint"" from the registered Crediflow where we are registered as a Creator.
+
+Let's send the transaction. After that, we press the ""Load"" button, and we can see that we have become an NFT holder.
+
+Let's also check the contract event. The number of NFTs we own has increased.
+
+Now, let's ""Claim"" it. The current Flow balance is 800. We send the transaction to ""Claim.""
+
+Let's check the contract event, and the balance has increased by 200 FLOW.",02.mp3
+"Finally, as a host, Crediflow can register itself with its own account.
+
+If you enter the address of the account you want to view in the ""Host"" section and load it, you can see the registered Crediflow.
+
+Let's create our own Crediflow for this recording. We press ""Create Own Crediflow"" and send the transaction.
+
+Let's check the contract event. After reloading, ""Recording Test"" has been registered!
+
+And that's it! Thank you for watching!",03.mp3
