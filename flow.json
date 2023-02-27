@@ -27,63 +27,63 @@
 			"address": "f0e099e78fc50f04",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-1.pkey"
+				"location": "./private/pkey/dummy-test-1.pkey"
 			}
 		},
 		"dummy-test-2": {
 			"address": "f5c72382f54be97f",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-2.pkey"
+				"location": "./private/pkey/dummy-test-2.pkey"
 			}
 		},
 		"dummy-test-3": {
 			"address": "0cdecdf5b1309de8",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-3.pkey"
+				"location": "./private/pkey/dummy-test-3.pkey"
 			}
 		},
 		"dummy-test-4": {
 			"address": "ed2c6d64468bcfad",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-4.pkey"
+				"location": "./private/pkey/dummy-test-4.pkey"
 			}
 		},
 		"dummy-test-5": {
 			"address": "fb780857df8fc5cc",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-5.pkey"
+				"location": "./private/pkey/dummy-test-5.pkey"
 			}
 		},
 		"dummy-test-6": {
 			"address": "e6065ffd8a0eb184",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-6.pkey"
+				"location": "./private/pkey/dummy-test-6.pkey"
 			}
 		},
 		"dummy-test-7": {
 			"address": "f4a265d1ccddd3d9",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-7.pkey"
+				"location": "./private/pkey/dummy-test-7.pkey"
 			}
 		},
 		"dummy-test-8": {
 			"address": "e9dc327b995ca791",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-8.pkey"
+				"location": "./private/pkey/dummy-test-8.pkey"
 			}
 		},
 		"dummy-test-9": {
 			"address": "1e7af7d9f7e3ffb5",
 			"key": {
 				"type": "file",
-				"location": "./private/dummy-test-9.pkey"
+				"location": "./private/pkey/dummy-test-9.pkey"
 			}
 		},
 		"emulator-account": {
@@ -106,28 +106,28 @@
 			"address": "497866d0e68bf2cf",
 			"key": {
 				"type": "file",
-				"location": "./private/hironow.pkey"
+				"location": "./private/pkey/hironow.pkey"
 			}
 		},
 		"hironow-test": {
 			"address": "39c64d9429295c04",
 			"key": {
 				"type": "file",
-				"location": "./private/hironow-test.pkey"
+				"location": "./private/pkey/hironow-test.pkey"
 			}
 		},
 		"hironow-test-admirer": {
 			"address": "0ca537db2c2086af",
 			"key": {
 				"type": "file",
-				"location": "./private/hironow-test-admirer.pkey"
+				"location": "./private/pkey/hironow-test-admirer.pkey"
 			}
 		},
 		"hironow-test-creator": {
 			"address": "a62b28e5da5d3609",
 			"key": {
 				"type": "file",
-				"location": "./private/hironow-test-creator.pkey"
+				"location": "./private/pkey/hironow-test-creator.pkey"
 			}
 		}
 	},
