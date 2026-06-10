@@ -5,3 +5,4 @@ private/
 flowdb/
 .vercel
 .env*
+test-results/
