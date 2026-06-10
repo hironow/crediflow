@@ -1,4 +1,5 @@
 <script>
+	// eslint-disable-next-line no-unused-vars -- `$host` refs in template handlers/bindings are not tracked by svelte-eslint-parser yet
 	import { host, user, contents, creatorNFTHoldersMap, admirerNFTHoldersMap } from '../flow/stores';
 	import {
 		getNFTHolder,
@@ -39,7 +40,7 @@
 	/**
 	 * get my nftId from the holders
 	 *
-	 * @param {Object} holders
+	 * @param {Record<string, any>} holders
 	 */
 	function getMyNFTIdFromHolders(holders) {
 		let nftId = holders[$user?.addr].id;
@@ -48,7 +49,7 @@
 </script>
 
 <article class="card">
-	{#each $contents as content, index (content.id)}
+	{#each $contents as content (content.id)}
 		<label for="name">
 			<input type="text" id="name" name="name" value={content.name} readonly />
 		</label>
@@ -65,7 +66,7 @@
 		</label> -->
 		<details open={false}>
 			<summary>Creators</summary>
-			{#each Object.entries(content.creators) as [creatorAddress, creatorMetadata], index (creatorAddress)}
+			{#each Object.entries(content.creators) as [creatorAddress, creatorMetadata] (creatorAddress)}
 				<div class="grid">
 					<label for="address">
 						<input
@@ -105,7 +106,7 @@
 								0}</i
 						></small
 					>
-					{#each Object.entries($creatorNFTHoldersMap[content.id]) as [address, nftData], index (address)}
+					{#each Object.entries($creatorNFTHoldersMap[content.id]) as [address, nftData] (address)}
 						<div class="grid">
 							<label for="serial">
 								<input
@@ -164,7 +165,7 @@
 								0}</i
 						></small
 					>
-					{#each Object.entries($admirerNFTHoldersMap[content.id]) as [address, nftData], index (address)}
+					{#each Object.entries($admirerNFTHoldersMap[content.id]) as [address, nftData] (address)}
 						<div class="grid">
 							<label for="serial">
 								<input

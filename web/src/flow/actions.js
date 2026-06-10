@@ -15,7 +15,7 @@ import {
 if (browser) {
 	// set Svelte $user store to currentUser,
 	// so other components can access it
-	fcl.currentUser.subscribe(user.set, []);
+	fcl.currentUser.subscribe(user.set);
 }
 
 // Lifecycle FCL Auth functions
@@ -23,8 +23,14 @@ export const unauthenticate = () => fcl.unauthenticate();
 export const logIn = () => fcl.logIn();
 export const signUp = () => fcl.signUp();
 
+/**
+ * @param {string} name
+ * @param {string[]} creatorAddressList
+ * @param {string[]} creatorRoleList
+ */
 export const createContent = async (name, creatorAddressList, creatorRoleList) => {
-	let transactionId = false;
+	/** @type {string | null} */
+	let transactionId = null;
 	initTransactionState();
 
 	try {
@@ -75,7 +81,7 @@ export const createContent = async (name, creatorAddressList, creatorRoleList) =
           }
         }
       `,
-			args: (arg, t) => [
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [
 				arg(name, t.String),
 				arg(creatorAddressList, t.Array(t.Address)),
 				arg(creatorRoleList, t.Array(t.String))
@@ -88,7 +94,7 @@ export const createContent = async (name, creatorAddressList, creatorRoleList) =
 
 		txId.set(transactionId);
 
-		fcl.tx(transactionId).subscribe((res) => {
+		fcl.tx(transactionId).subscribe((/** @type {any} */ res) => {
 			transactionStatus.set(res.status);
 			if (res.status === 4) {
 				setTimeout(() => transactionInProgress.set(false), 2000);
@@ -100,8 +106,10 @@ export const createContent = async (name, creatorAddressList, creatorRoleList) =
 	}
 };
 
+/** @param {string} host */
 export const getAllContent = async (host) => {
-	let queryResult = false;
+	/** @type {any} */
+	let queryResult = null;
 
 	try {
 		queryResult = await fcl.query({
@@ -142,7 +150,7 @@ export const getAllContent = async (host) => {
           }
       }
       `,
-			args: (arg, t) => [arg(host, t.Address)]
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [arg(host, t.Address)]
 		});
 		// obj -> list
 		console.log(Object.values(queryResult));
@@ -152,8 +160,13 @@ export const getAllContent = async (host) => {
 	}
 };
 
+/**
+ * @param {number} contentId
+ * @param {string} host
+ */
 export const getNFTHolder = async (contentId, host) => {
-	let queryResult = false;
+	/** @type {any} */
+	let queryResult = null;
 
 	try {
 		queryResult = await fcl.query({
@@ -192,7 +205,10 @@ export const getNFTHolder = async (contentId, host) => {
           }
       }
       `,
-			args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)]
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [
+				arg(contentId, t.UInt64),
+				arg(host, t.Address)
+			]
 		});
 		// obj -> list
 		// 1: id, 2: name, 3: host, 4: creatorHolders, 5: admirerHolders
@@ -212,6 +228,10 @@ export const getNFTHolder = async (contentId, host) => {
 	}
 };
 
+/**
+ * @param {number} contentId
+ * @param {string} host
+ */
 export const mintCreatorNFT = async (contentId, host) => {
 	initTransactionState();
 	try {
@@ -248,7 +268,10 @@ export const mintCreatorNFT = async (contentId, host) => {
           }
         }
       `,
-			args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [
+				arg(contentId, t.UInt64),
+				arg(host, t.Address)
+			],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
@@ -257,7 +280,7 @@ export const mintCreatorNFT = async (contentId, host) => {
 
 		txId.set(transactionId);
 
-		fcl.tx(transactionId).subscribe((res) => {
+		fcl.tx(transactionId).subscribe((/** @type {any} */ res) => {
 			transactionStatus.set(res.status);
 			if (res.status === 4) {
 				setTimeout(() => transactionInProgress.set(false), 2000);
@@ -269,6 +292,10 @@ export const mintCreatorNFT = async (contentId, host) => {
 	}
 };
 
+/**
+ * @param {number} contentId
+ * @param {string} host
+ */
 export const mintAdmirerNFT = async (contentId, host) => {
 	initTransactionState();
 	try {
@@ -305,7 +332,10 @@ export const mintAdmirerNFT = async (contentId, host) => {
           }
         }
       `,
-			args: (arg, t) => [arg(contentId, t.UInt64), arg(host, t.Address)],
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [
+				arg(contentId, t.UInt64),
+				arg(host, t.Address)
+			],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
@@ -314,7 +344,7 @@ export const mintAdmirerNFT = async (contentId, host) => {
 
 		txId.set(transactionId);
 
-		fcl.tx(transactionId).subscribe((res) => {
+		fcl.tx(transactionId).subscribe((/** @type {any} */ res) => {
 			transactionStatus.set(res.status);
 			if (res.status === 4) {
 				setTimeout(() => transactionInProgress.set(false), 2000);
@@ -326,6 +356,7 @@ export const mintAdmirerNFT = async (contentId, host) => {
 	}
 };
 
+/** @param {number} nftId */
 export const executeClaim = async (nftId) => {
 	initTransactionState();
 	try {
@@ -359,7 +390,7 @@ export const executeClaim = async (nftId) => {
           }
         }
       `,
-			args: (arg, t) => [arg(nftId, t.UInt64)],
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [arg(nftId, t.UInt64)],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
@@ -368,7 +399,7 @@ export const executeClaim = async (nftId) => {
 
 		txId.set(transactionId);
 
-		fcl.tx(transactionId).subscribe((res) => {
+		fcl.tx(transactionId).subscribe((/** @type {any} */ res) => {
 			transactionStatus.set(res.status);
 			if (res.status === 4) {
 				setTimeout(() => transactionInProgress.set(false), 2000);
@@ -380,6 +411,10 @@ export const executeClaim = async (nftId) => {
 	}
 };
 
+/**
+ * @param {number} nftId
+ * @param {number} tipAmount
+ */
 export const executeTip = async (nftId, tipAmount) => {
 	initTransactionState();
 	try {
@@ -413,7 +448,10 @@ export const executeTip = async (nftId, tipAmount) => {
           }
         }
       `,
-			args: (arg, t) => [arg(nftId, t.UInt64), arg(tipAmount.toFixed(8), t.UFix64)],
+			args: (/** @type {any} */ arg, /** @type {any} */ t) => [
+				arg(nftId, t.UInt64),
+				arg(tipAmount.toFixed(8), t.UFix64)
+			],
 			payer: fcl.authz,
 			proposer: fcl.authz,
 			authorizations: [fcl.authz],
@@ -422,7 +460,7 @@ export const executeTip = async (nftId, tipAmount) => {
 
 		txId.set(transactionId);
 
-		fcl.tx(transactionId).subscribe((res) => {
+		fcl.tx(transactionId).subscribe((/** @type {any} */ res) => {
 			transactionStatus.set(res.status);
 			if (res.status === 4) {
 				setTimeout(() => transactionInProgress.set(false), 2000);
@@ -435,7 +473,7 @@ export const executeTip = async (nftId, tipAmount) => {
 };
 
 function initTransactionState() {
-	txId.set(false);
+	txId.set(null);
 	transactionInProgress.set(true);
 	transactionStatus.set(-1);
 }
