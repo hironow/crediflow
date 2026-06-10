@@ -10,7 +10,7 @@
 				<kbd>Initializing</kbd><br />
 				<small>Waiting for transaction approval.</small>
 			</span>
-			<progress indeterminate>Initializing...</progress>
+			<progress>Initializing...</progress>
 		{:else if $transactionStatus < 2}
 			<span>
 				<kbd>Pending</kbd>
@@ -27,7 +27,7 @@
 					The transaction has been received by a collector but not yet finalized in a block.
 				</small>
 			</span>
-			<progress indeterminate>Finalizing...</progress>
+			<progress>Finalizing...</progress>
 		{:else if $transactionStatus === 2}
 			<span>
 				<kbd>Finalized</kbd>
@@ -44,7 +44,7 @@
 					>The consensus nodes have finalized the block that the transaction is included in.</small
 				>
 			</span>
-			<progress min="0" max="100" value="60">Executing...</progress>
+			<progress max="100" value="60">Executing...</progress>
 		{:else if $transactionStatus === 3}
 			<span>
 				<kbd>Executed</kbd>
@@ -59,7 +59,7 @@
 				</span><br />
 				<small> The execution nodes have produced a result for the transaction. </small>
 			</span>
-			<progress min="0" max="100" value="80">Sealing...</progress>
+			<progress max="100" value="80">Sealing...</progress>
 		{:else if $transactionStatus === 4}
 			<span>
 				<kbd>✓ Sealed</kbd>
@@ -77,7 +77,7 @@
 					latest block.</small
 				>
 			</span>
-			<progress min="0" max="100" value="100">Sealed!</progress>
+			<progress max="100" value="100">Sealed!</progress>
 		{:else if $transactionStatus === 5}
 			<span>
 				<kbd>Expired</kbd>
