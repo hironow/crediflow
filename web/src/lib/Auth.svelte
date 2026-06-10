@@ -1,4 +1,5 @@
 <script>
+	// eslint-disable-next-line no-unused-vars -- `$host` refs in template handlers/bindings are not tracked by svelte-eslint-parser yet
 	import { contents, user, host, newContent } from '../flow/stores';
 	import { getAllContent, unauthenticate, logIn, signUp, createContent } from '../flow/actions';
 
@@ -28,8 +29,8 @@
 			<h1>Welcome to Crediflow!</h1>
 			<p>
 				This contract is for <code>Crediflow</code>, a decentralized platform on the
-				<strong>Flow</strong> blockchain that enables creators and admirers to share and reward each
-				other with end credits and tips.
+				<strong>Flow</strong> blockchain that enables creators and admirers to share and reward each other
+				with end credits and tips.
 			</p>
 			{#if !$user?.loggedIn}
 				<p>Login to get started.</p>
@@ -73,7 +74,7 @@
 					</label>
 					<!-- new content creator address and role dynamic additional and removable forms by using dynamic form count -->
 
-					{#each $newContent.creators as creator, index}
+					{#each $newContent.creators as _creator, index (index)}
 						<div class="grid">
 							<label for="role">
 								<input
