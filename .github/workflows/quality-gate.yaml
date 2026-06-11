@@ -21,7 +21,10 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          # Rust rewrite is distributed via the canary channel only; canary is a
+          # moving tag, so never reuse a cached executable.
+          bun-version: canary
+          no-cache: true
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
