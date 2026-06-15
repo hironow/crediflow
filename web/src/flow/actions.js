@@ -29,12 +29,11 @@ export const signUp = () => fcl.signUp();
  * @param {string[]} creatorRoleList
  */
 export const createContent = async (name, creatorAddressList, creatorRoleList) => {
-	/** @type {string | null} */
-	let transactionId = null;
 	initTransactionState();
 
 	try {
-		transactionId = await fcl.mutate({
+		/** @type {string} */
+		const transactionId = await fcl.mutate({
 			cadence: `
         import Crediflow from 0xCrediflow
 
@@ -108,11 +107,9 @@ export const createContent = async (name, creatorAddressList, creatorRoleList) =
 
 /** @param {string} host */
 export const getAllContent = async (host) => {
-	/** @type {any} */
-	let queryResult = null;
-
 	try {
-		queryResult = await fcl.query({
+		/** @type {any} */
+		const queryResult = await fcl.query({
 			cadence: `
         import Crediflow from 0xCrediflow
 
@@ -165,11 +162,9 @@ export const getAllContent = async (host) => {
  * @param {string} host
  */
 export const getNFTHolder = async (contentId, host) => {
-	/** @type {any} */
-	let queryResult = null;
-
 	try {
-		queryResult = await fcl.query({
+		/** @type {any} */
+		const queryResult = await fcl.query({
 			cadence: `
         import Crediflow from 0xCrediflow
 

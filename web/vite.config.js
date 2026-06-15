@@ -11,7 +11,13 @@ const config = {
 	plugins: [
 		nodePolyfills({
 			// Whether to polyfill `node:` protocol imports.
-			protocolImports: true
+			protocolImports: true,
+			// Exclude the `module` builtin from polyfilling. Under Vite 8's rolldown
+			// bundler the generated runtime emits `import { createRequire } from
+			// 'node:module'`; polyfilling `module` maps it to an empty mock with no
+			// `createRequire` export, which breaks the build. The browser bundle does
+			// not use `node:module` itself, so excluding it is safe.
+			exclude: ['module']
 		}),
 		sveltekit()
 	],
