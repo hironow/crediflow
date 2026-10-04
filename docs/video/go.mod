@@ -1,8 +1,8 @@
 module video
 
-go 1.25.0
+go 1.26.0
 
-require cloud.google.com/go/texttospeech v1.22.0
+require cloud.google.com/go/texttospeech v1.23.0
 
 require (
 	cloud.google.com/go v0.123.0 // indirect
@@ -33,6 +33,6 @@ require (
 	google.golang.org/api v0.287.1 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260630182238-925bb5da69e7 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260630182238-925bb5da69e7 // indirect
-	google.golang.org/grpc v1.82.0 // indirect
+	google.golang.org/grpc v1.83.1 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
