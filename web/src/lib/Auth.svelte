@@ -1,6 +1,5 @@
 <script>
-	// eslint-disable-next-line no-unused-vars -- `$host` refs in template handlers/bindings are not tracked by svelte-eslint-parser yet
-	import { contents, user, host, newContent } from '../flow/stores';
+	import { contents, user, host as crediflowHost, newContent } from '../flow/stores';
 	import { getAllContent, unauthenticate, logIn, signUp, createContent } from '../flow/actions';
 
 	import UserAddress from './UserAddress.svelte';
@@ -54,10 +53,10 @@
 				<h2>Controls</h2>
 				<label for="host"
 					>Crediflow Host
-					<input type="text" id="host" name="host" placeholder="Host" bind:value={$host} />
+					<input type="text" id="host" name="host" placeholder="Host" bind:value={$crediflowHost} />
 					<small><code>0x497866d0e68bf2cf</code> is prepared for check</small>
 				</label>
-				<button on:click={() => getAllContent($host)}>Load Host Crediflow</button>
+				<button on:click={() => getAllContent($crediflowHost)}>Load Host Crediflow</button>
 
 				<hr />
 
