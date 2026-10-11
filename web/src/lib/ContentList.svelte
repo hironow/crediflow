@@ -1,6 +1,11 @@
 <script>
-	// eslint-disable-next-line no-unused-vars -- `$host` refs in template handlers/bindings are not tracked by svelte-eslint-parser yet
-	import { host, user, contents, creatorNFTHoldersMap, admirerNFTHoldersMap } from '../flow/stores';
+	import {
+		host as crediflowHost,
+		user,
+		contents,
+		creatorNFTHoldersMap,
+		admirerNFTHoldersMap
+	} from '../flow/stores';
 	import {
 		getNFTHolder,
 		mintCreatorNFT,
@@ -96,7 +101,7 @@
 		</details>
 		<details open={false}>
 			<summary>Holders</summary>
-			<button on:click={() => getNFTHolder(content.id, $host)}>Load</button>
+			<button on:click={() => getNFTHolder(content.id, $crediflowHost)}>Load</button>
 
 			<div>
 				{#if content.id in $creatorNFTHoldersMap}
@@ -139,7 +144,7 @@
 							<button
 								class="outline"
 								disabled={!isAddressInList($user?.addr, Object.keys(content.creators))}
-								on:click={() => mintCreatorNFT(content.id, $host)}>Creator Mint</button
+								on:click={() => mintCreatorNFT(content.id, $crediflowHost)}>Creator Mint</button
 							>
 						{:else}
 							<button
@@ -200,7 +205,7 @@
 									$user?.addr,
 									Object.keys($admirerNFTHoldersMap[content.id])
 								)}
-								on:click={() => mintAdmirerNFT(content.id, $host)}>Admirer Mint</button
+								on:click={() => mintAdmirerNFT(content.id, $crediflowHost)}>Admirer Mint</button
 							>
 						{:else}
 							<label for="tipAmount">

@@ -4,7 +4,7 @@
 
 <div class="mb-1">
 	{#if $user?.addr}
-		<span class="led-green" />
+		<span class="led-green"></span>
 	{/if}
 	<span class="mono">{$user?.addr ?? 'No Address'}</span>
 </div>

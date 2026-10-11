@@ -14,7 +14,7 @@
 		<a href="https://hackathon.flow.com/">flow hackathon</a> project <code>Crediflow</code> by hironow
 	</p>
 	<p>
-		<a href="https://github.com/hironow/crediflow">
+		<a href="https://github.com/hironow/crediflow" aria-label="Crediflow source on GitHub">
 			<svg
 				width="32"
 				height="32"
