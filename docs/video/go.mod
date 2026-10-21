@@ -1,6 +1,6 @@
 module video
 
-go 1.26.0
+go 1.26.10
 
 require cloud.google.com/go/texttospeech v1.23.0
 
